@@ -13,5 +13,8 @@ UCLASS()
 class OPENMMORPG_API UOpenMMORPG_GameInstance : public UGameInstance
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void Init() override;
+	//virtual void Shutdown() override;
 };

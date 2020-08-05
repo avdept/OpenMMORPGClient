@@ -6,6 +6,8 @@
 #include "UObject/NoExportTypes.h"
 #include "Networking.h"
 #include "SocketSubsystem.h"
+#include "google/protobuf/message.h"
+
 #include "SocketObject.generated.h"
 
 /**
@@ -26,6 +28,10 @@ public:
 	static bool bIsConnected;
 	//static void Reconnect();
 	static bool Alive();
+	static bool SendByUDP(google::protobuf::Message* message);
+	static void RunUDPSocketReceiver();
+	static bool ReadDelimitedFrom(google::protobuf::io::CodedInputStream* input, google::protobuf::MessageLite* message);
+	static void Recv(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4Endpoint& EndPt);
 
 
 	//UDP

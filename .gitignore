@@ -75,6 +75,8 @@ Build/*/**
 
 # Don't ignore icon files in Build
 !Build/**/*.ico
+!Binaries/Win64/libcrypto-3.dll
+!Binaries/Win64/libssl-3.dll
 
 # Built data for maps
 *_BuiltData.uasset

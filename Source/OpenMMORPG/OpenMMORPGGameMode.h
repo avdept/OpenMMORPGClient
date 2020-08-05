@@ -14,6 +14,7 @@ class AOpenMMORPGGameMode : public AGameModeBase
 public:
 	virtual void BeginPlay() override;
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
+	void TestUDPMessage();
 	AOpenMMORPGGameMode();
 };
 

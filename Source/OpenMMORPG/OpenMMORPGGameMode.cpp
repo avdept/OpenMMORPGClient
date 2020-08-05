@@ -3,6 +3,8 @@
 #include "OpenMMORPGGameMode.h"
 #include "OpenMMORPGCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Network/SocketObject.h"
+#include "Network/Proto/MessageModels.pb.h"
 
 AOpenMMORPGGameMode::AOpenMMORPGGameMode()
 {
@@ -19,11 +21,25 @@ void AOpenMMORPGGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Display, TEXT("##################################      START GM_SERVER_WORLD    #######################################"));
-	UE_LOG(LogTemp, Display, TEXT("GM_SERVER_WORLD: BeginPlay"));
+	//#if WITH_SERVER_CODE
+
+		UE_LOG(LogTemp, Display, TEXT("##################################      START GM_SERVER_WORLD    #######################################"));
+		UE_LOG(LogTemp, Display, TEXT("GM_SERVER_WORLD: BeginPlay"));
 
 
-	UE_LOG(LogTemp, Display, TEXT("##################################        END GM_SERVER_WORLD    #######################################"));
+		UE_LOG(LogTemp, Display, TEXT("##################################        END GM_SERVER_WORLD    #######################################"));
+	//#endif
+	TestUDPMessage();
+}
+
+void AOpenMMORPGGameMode::TestUDPMessage()
+{
+	GLog->Log("send ->>>");
+
+	std::shared_ptr<Utility> utility(new Utility);
+	utility->set_alive(true);
+
+	USocketObject::SendByUDP(utility.get());
 }
 
 void AOpenMMORPGGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)

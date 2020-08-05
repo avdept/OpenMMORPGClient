@@ -1,5 +1,6 @@
-#include "../OpenMMORPG.h"
+
 #include "Descriptors.h"
+#include "../OpenMMORPG.h"
 #include "Proto/RegLogModels.pb.h"
 #include "Proto/MessageModels.pb.h"
 #include "Proto/MainMenuModels.pb.h"
