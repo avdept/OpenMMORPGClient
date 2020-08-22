@@ -16,5 +16,5 @@ class OPENMMORPG_API UOpenMMORPG_GameInstance : public UGameInstance
 
 public:
 	virtual void Init() override;
-	//virtual void Shutdown() override;
+	virtual void Shutdown() override;
 };

@@ -8,6 +8,7 @@
 #include "NetworkConfig.h"
 #include "google/protobuf/message.h"
 #include "Proto/MessageModels.pb.h"
+#include "Network/Handlers/MessageEncoder.h"
 #include "google/protobuf/port_def.inc"
 
 
@@ -36,6 +37,8 @@ void USocketObject::InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCP
     FIPv4Address ServerIP;
     FIPv4Address::Parse(ServerAddress, ServerIP);
 
+    // TCP
+
     TCPAddress->SetIp(ServerIP.Value);
     TCPAddress->SetPort(TCPServerP);
 
@@ -45,19 +48,20 @@ void USocketObject::InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCP
 
     // UDP
 
-    UDPAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM) -> CreateInternetAddr();
+    //UDPAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
 
     FIPv4Address::Parse(ServerAddress, ServerIP);
 
-    UDPAddress->SetIp(ServerIP.Value);
-    UDPAddress->SetPort(UDPServerP);
+    //UDPAddress->SetIp(ServerIP.Value);
+    //UDPAddress->SetPort(UDPServerP);
 
-    UDPSocket = FUdpSocketBuilder("UDP_SOCKET").AsReusable().BoundToPort(UDPLocalPort).WithBroadcast().WithReceiveBufferSize(BufferSize).WithSendBufferSize(BufferSize).Build();
-}
-
-bool USocketObject::Alive()
-{
-    return false;
+    UDPSocket = FUdpSocketBuilder(TEXT("UDP_SOCKET2"))
+    .AsReusable()
+    .BoundToPort(UDPServerP)
+    .WithBroadcast()
+    .WithReceiveBufferSize(BufferSize)
+    .WithSendBufferSize(BufferSize)
+    .Build();
 }
 
 bool USocketObject::SendByUDP(google::protobuf::Message *message)
@@ -102,10 +106,30 @@ bool USocketObject::SendByUDP(google::protobuf::Message *message)
     
 }
 
+void USocketObject::Reconnect()
+{
+    //TCPSocket->Close();
+
+    uint32 OutIP;
+    TCPAddress->GetIp(OutIP);
+
+    FString ip = FString::Printf(TEXT("%d.%d.%d.%d"), 0xff & (OutIP >> 24), 0xff & (OutIP >> 16), 0xff & (OutIP >> 8), 0xff & OutIP);
+
+    //InitSocket(ip, TCPLocalPort, TCPAddress->GetPort(), UDPLocalPort, UDPAddress->GetPort());
+}
+
+bool USocketObject::Alive()
+{
+    std::shared_ptr<Utility> utility(new Utility);
+    utility->set_alive(true);
+    
+    return UMessageEncoder::Send(utility.get(), false, false);
+}
+
 void USocketObject::RunUDPSocketReceiver()
 {
     GLog->Log("Listening from UDP socket");
-    FTimespan ThreadWaitTime = FTimespan::FromMilliseconds(30);
+    const FTimespan ThreadWaitTime = FTimespan::FromMilliseconds(30);
 
     UDPReceiver = new FUdpSocketReceiver(UDPSocket, ThreadWaitTime, TEXT("UDP Receiver"));
 
@@ -151,7 +175,7 @@ USocketObject::~USocketObject()
     if (TCPSocket != nullptr || UDPSocket != nullptr)
     {
         TCPSocket->Close();
-        //UDPSocket->Close();
+        UDPSocket->Close();
 
         delete TCPSocket;
         delete UDPSocket;

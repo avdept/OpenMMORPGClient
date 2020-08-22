@@ -30,6 +30,7 @@ public:
 	static bool Alive();
 	static bool SendByUDP(google::protobuf::Message* message);
 	static void RunUDPSocketReceiver();
+	static void Reconnect();
 	static bool ReadDelimitedFrom(google::protobuf::io::CodedInputStream* input, google::protobuf::MessageLite* message);
 	static void Recv(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4Endpoint& EndPt);
 

@@ -46,6 +46,14 @@
 		{
 			"Name": "Volumetrics",
 			"Enabled": true
+		},
+		{
+			"Name": "AESHandlerComponent",
+			"Enabled": true
+		},
+		{
+			"Name": "SunPosition",
+			"Enabled": true
 		}
 	]
 }
