@@ -14,15 +14,17 @@ void UOpenMMORPG_GameInstance::Init()
     USocketObject::InitSocket(NetworkConfig::address.c_str(), NetworkConfig::tcp_local_port, NetworkConfig::tcp_server_port, NetworkConfig::udp_local_port, NetworkConfig::udp_server_port);
 
     //Init listening for UDP
-    //USocketObject::RunUDPSocketReceiver();
+    USocketObject::RunUDPSocketReceiver();
 
-    //FServerStatusCheckingTh::RunServerChecking();
-    //FTCPSocketListeningTh::RunSocketListener();
+    FServerStatusCheckingTh::RunServerChecking();
+    FTCPSocketListeningTh::RunSocketListener();
 }
 
 void UOpenMMORPG_GameInstance::Shutdown()
 {
-    //FServerStatusCheckingTh::Shutdown();
+    FServerStatusCheckingTh::Shutdown();
 
-    //FTCPSocketListeningTh::Shutdown();
+    
+    FTCPSocketListeningTh::Shutdown();
+    USocketObject::Shutdown();
 }

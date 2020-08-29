@@ -32,8 +32,10 @@ void USocketObject::InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCP
     UDPLocalPort = UDPLocalP;
 
     TCPSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("TCP_SOCKET"), false);
-    TCPAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM) ->CreateInternetAddr();
+    TCPAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
 
+
+    TCPSocket->SetLinger(false);
     FIPv4Address ServerIP;
     FIPv4Address::Parse(ServerAddress, ServerIP);
 
@@ -43,25 +45,25 @@ void USocketObject::InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCP
     TCPAddress->SetPort(TCPServerP);
 
     TCPSocket->Connect(*TCPAddress);
-
-    bIsConnected = Alive();
-
+    TCPSocket->SetNoDelay(true);
     // UDP
 
-    //UDPAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
+    UDPAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
 
     FIPv4Address::Parse(ServerAddress, ServerIP);
 
-    //UDPAddress->SetIp(ServerIP.Value);
-    //UDPAddress->SetPort(UDPServerP);
+    UDPAddress->SetIp(ServerIP.Value);
+    UDPAddress->SetPort(UDPServerP);
 
-    UDPSocket = FUdpSocketBuilder(TEXT("UDP_SOCKET2"))
+    UDPSocket = FUdpSocketBuilder(TEXT("UDP_SOCKET2"))  
     .AsReusable()
     .BoundToPort(UDPServerP)
     .WithBroadcast()
     .WithReceiveBufferSize(BufferSize)
     .WithSendBufferSize(BufferSize)
     .Build();
+
+    bIsConnected = Alive();
 }
 
 bool USocketObject::SendByUDP(google::protobuf::Message *message)
@@ -92,30 +94,22 @@ bool USocketObject::SendByUDP(google::protobuf::Message *message)
     }
 
     int32 bytesSent = 0;
-
-    //auto deb = BytesFromString
-    std::cout << &buffer << std::endl;
-
-    //UE_LOG(LogTemp, Log, TEXT("%s"), outputString);
     const bool sentState = UDPSocket->SendTo(buffer, output.ByteCount(), bytesSent, *UDPAddress);
-
-
     delete []buffer;
-
     return sentState;
     
 }
 
 void USocketObject::Reconnect()
 {
-    //TCPSocket->Close();
+    TCPSocket->Close();
 
     uint32 OutIP;
     TCPAddress->GetIp(OutIP);
 
     FString ip = FString::Printf(TEXT("%d.%d.%d.%d"), 0xff & (OutIP >> 24), 0xff & (OutIP >> 16), 0xff & (OutIP >> 8), 0xff & OutIP);
 
-    //InitSocket(ip, TCPLocalPort, TCPAddress->GetPort(), UDPLocalPort, UDPAddress->GetPort());
+    InitSocket(ip, TCPLocalPort, TCPAddress->GetPort(), UDPLocalPort, UDPAddress->GetPort());
 }
 
 bool USocketObject::Alive()
@@ -123,7 +117,7 @@ bool USocketObject::Alive()
     std::shared_ptr<Utility> utility(new Utility);
     utility->set_alive(true);
     
-    return UMessageEncoder::Send(utility.get(), false, false);
+    return UMessageEncoder::Send(utility.get(), false, true);
 }
 
 void USocketObject::RunUDPSocketReceiver()
@@ -170,14 +164,25 @@ bool USocketObject::ReadDelimitedFrom(google::protobuf::io::CodedInputStream *in
     return true;
 }
 
-USocketObject::~USocketObject()
+void USocketObject::Shutdown()
 {
-    if (TCPSocket != nullptr || UDPSocket != nullptr)
+    if (TCPSocket != nullptr)
     {
+        GLog->Log("Closing sockets");
         TCPSocket->Close();
-        UDPSocket->Close();
+        ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(TCPSocket);
+        TCPSocket = nullptr;
+        
+    }
 
-        delete TCPSocket;
+    if (UDPSocket != nullptr)
+    {
+        if (UDPReceiver != nullptr)
+        {
+            UDPReceiver->Stop();    
+        }
+        UDPSocket->Close();
+        GLog->Log("UDP Socket closed");
         delete UDPSocket;
     }
 }
