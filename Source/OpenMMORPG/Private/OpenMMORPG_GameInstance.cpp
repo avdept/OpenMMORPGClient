@@ -25,6 +25,9 @@ void UOpenMMORPG_GameInstance::Shutdown()
     FServerStatusCheckingTh::Shutdown();
     FTCPSocketListeningTh::Shutdown();
     // We want to wait a little to make sure all connections are closed. This is kinda of a hack, since its better to implement thread safe singleton
-    FPlatformProcess::Sleep(1.f);
+    while (FServerStatusCheckingTh::IsThreadRunning() || FTCPSocketListeningTh::IsThreadRunning())
+    {
+        FPlatformProcess::Sleep(0.5f); 
+    }
     USocketObject::Shutdown();
 }
