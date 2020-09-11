@@ -9,14 +9,19 @@ public class protobuf : ModuleRules
 	{
         Type = ModuleType.External;
         
-		PublicSystemIncludePaths.Add(Path.Combine(ModuleDirectory, "include"));
+        PublicSystemIncludePaths.Add(Path.Combine(ModuleDirectory, "include"));
 
-       
-      
-                PublicSystemLibraries.Add(Path.Combine(ModuleDirectory, "lib", "Win64"));
-                PublicAdditionalLibraries.Add("libprotobuf.lib");
-            
-
+        if (Target.Platform == UnrealTargetPlatform.Mac)
+        {
+	        return;
+        } 
+        
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+	        PublicSystemLibraries.Add(Path.Combine(ModuleDirectory, "lib", "Win64"));
+	        PublicAdditionalLibraries.Add("libprotobuf.lib");
+        }
+        
         PublicDefinitions.Add("GOOGLE_PROTOBUF_NO_RTTI=1");
     }
 }

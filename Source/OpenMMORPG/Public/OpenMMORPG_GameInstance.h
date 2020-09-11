@@ -15,6 +15,11 @@ class OPENMMORPG_API UOpenMMORPG_GameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(BlueprintReadOnly)
+	FString AuthToken;
 	virtual void Init() override;
 	virtual void Shutdown() override;
+
+	void SetCommandLineArgs();
 };
