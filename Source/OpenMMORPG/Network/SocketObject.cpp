@@ -181,6 +181,7 @@ void USocketObject::Shutdown()
         {
             UDPReceiver->Stop();    
         }
+        FPlatformProcess::Sleep(1.1f); 
         UDPSocket->Close();
         GLog->Log("UDP Socket closed");
         delete UDPSocket;

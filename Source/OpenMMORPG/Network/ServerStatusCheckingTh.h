@@ -17,6 +17,7 @@ public:
     virtual bool Init() override;
     virtual uint32 Run() override;
 
+    static bool IsThreadRunning() { return bIsThreadRunning; };
 
     static FServerStatusCheckingTh* RunServerChecking();
 

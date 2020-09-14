@@ -17,7 +17,15 @@ void ABaseHUD::DrawHUD()
     unsigned char test[] = "test";
     FString hashTest = "Hash test sha(256): " + GetSHA256_s("test", strlen("test"));
 
+    FString token;
+    auto cmd = FCommandLine::Get();
+    GLog->Log(cmd);
+    if (FParse::Value(FCommandLine::Get(), TEXT("token="), token))
+    {
+        DrawText(token, FColor::Red, 50, 100);
+    }
     DrawText(hashTest, FColor::White, 50, 50);
+    
 }
 
 FString ABaseHUD::GetSHA256_s(const void * data, size_t data_len)
@@ -41,6 +49,5 @@ FString ABaseHUD::GetSHA256_s(const void * data, size_t data_len)
         s << std::setw(2) << std::hex << (unsigned short)md_value[i];
  
     return s.str().c_str();
-    //return s.str().c_str();
 }
 
