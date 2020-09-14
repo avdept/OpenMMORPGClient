@@ -31,30 +31,34 @@ public class OpenMMORPGServer : ModuleRules
 	public OpenMMORPGServer(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { 
-			"Core", 
-			"CoreUObject", 
-			"Engine", 
+
+		PublicDependencyModuleNames.AddRange(new string[] {
+			"Core",
+			"CoreUObject",
+			"Engine",
 			"InputCore",
 			"OpenMMORPG"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {
 
-			 
 		});
 
-		List<string> allPublicDirectories = GetSubDirectories(ModuleDirectory + @"\Public\");
-		
+		List<string> allPublicDirectories = new List<String>();
+		List<string> allPrivateDirectories = new List<String>();;
 
-		List<string> allPrivateDirectories = GetSubDirectories(ModuleDirectory + @"\Private\");
-		
+		if (Target.Platform == UnrealTargetPlatform.Mac) {
+			allPublicDirectories = GetSubDirectories(ModuleDirectory + @"/Public/");
+			allPrivateDirectories = GetSubDirectories(ModuleDirectory + @"/Private/");
+		}
+
+		if (Target.Platform == UnrealTargetPlatform.Win64) {
+			allPublicDirectories = GetSubDirectories(ModuleDirectory + @"\Public\");
+			allPrivateDirectories = GetSubDirectories(ModuleDirectory + @"\Private\");
+		}
 
 		PublicIncludePaths.AddRange(allPublicDirectories);
 		PrivateIncludePaths.AddRange(allPrivateDirectories);
-
-		
 		PrivateDependencyModuleNames.Add("OnlineSubsystem");
 	}
 }
