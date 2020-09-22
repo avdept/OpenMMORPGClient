@@ -16,6 +16,9 @@ class OPENMMORPG_API UNetworkInterface : public UObject
 
 	UFUNCTION(BlueprintCallable)
 	static void SendUDPMessage();
+	
+	UFUNCTION(BlueprintCallable)
+	static void SendGRCPMessage();
 
 	UFUNCTION(BlueprintCallable)
 	static void SendTCPMessage();

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "main";
+
+import "DisableWarnings.proto";
+
+message UserRequest {
+  bool alive = 1;
+}
+
+message UserResponse {
+  bool alive = 1;
+}
+
+service UserService {
+  rpc CheckAlive(UserRequest) returns(UserResponse) {};
+}

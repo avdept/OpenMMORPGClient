@@ -2,7 +2,7 @@
 
 bool NetworkConfig::bEnableCrypt = true;
 
-std::string NetworkConfig::address = "10.0.1.6";
+std::string NetworkConfig::address = "10.0.1.7";
 
 size_t NetworkConfig::tcp_local_port = 7678;
 
