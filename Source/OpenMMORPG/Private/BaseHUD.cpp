@@ -19,7 +19,6 @@ void ABaseHUD::DrawHUD()
 
     FString token;
     auto cmd = FCommandLine::Get();
-    GLog->Log(cmd);
     if (FParse::Value(FCommandLine::Get(), TEXT("token="), token))
     {
         DrawText(token, FColor::Red, 50, 100);

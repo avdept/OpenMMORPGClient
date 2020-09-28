@@ -20,5 +20,6 @@ public:
  
  UFUNCTION(BlueprintCallable)
  static TArray<UWorldServerEntity*> GetListOfServers();
+ static TArray<UWorldServerEntity*> ServerList;
  
 };

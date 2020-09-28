@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Network/ServerListItem.h"
+#include "OpenMMORPG/Network/HTTPRequestManager.h"
+
+
 #include "OpenMMORPG_GameInstance.generated.h"
 
 /**
@@ -21,5 +25,10 @@ public:
 	virtual void Init() override;
 	virtual void Shutdown() override;
 
+	TArray<UServerListItem*> ServerListItemItems;
+
+	UFUNCTION(BlueprintCallable)
+	void OnServerListFetched(bool bSuccess, UHTTPRequestManager* RequestManager, ERequestResult status);
+	
 	void SetCommandLineArgs();
 };

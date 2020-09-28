@@ -4,7 +4,9 @@
 #include "OpenMMORPG/Public/Network/NetworkInterface.h"
 
 
-#include "grpcpp/create_channel.h"
+
+#include "OpenMMORPG/Network/NetworkConfig.h"
+#include "ThirdParty/grpc/include/grpcpp/create_channel.h"
 #include "OpenMMORPG/Public/Network/Handlers/MessageEncoder.h"
 #include "OpenMMORPG/Network/Proto/MessageModels.pb.h"
 #include "OpenMMORPG/Network/Proto/User.grpc.pb.h"
@@ -38,7 +40,9 @@ void UNetworkInterface::SendUDPMessage()
 
 void UNetworkInterface::SendGRCPMessage()
 {
-    auto channel = grpc::CreateChannel("10.0.1.7:1057", grpc::InsecureChannelCredentials());
+    
+    
+    auto channel = grpc::CreateChannel(std::string(TCHAR_TO_UTF8(*NetworkConfig::tcp_server_url)), grpc::InsecureChannelCredentials());
     auto stub = UserService::NewStub(channel);
     grpc::ClientContext context;
     UserResponse response;
@@ -48,7 +52,7 @@ void UNetworkInterface::SendGRCPMessage()
     grpc::Status status = stub->CheckAlive(&context, request, &response);
     if (status.ok())
     {
-        GLog->Log("Alive");
+        GLog->Log("Success");
     } else
     {
         GLog->Log("Error");   

@@ -9,7 +9,7 @@ public class Grpc : ModuleRules
 	{
         Type = ModuleType.External;
         
-        //PublicSystemIncludePaths.Add(Path.Combine(ModuleDirectory, "include"));
+        PublicSystemIncludePaths.Add(Path.Combine(ModuleDirectory, "include"));
 
         if (Target.Platform == UnrealTargetPlatform.Mac)
         {

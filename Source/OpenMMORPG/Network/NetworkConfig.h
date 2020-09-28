@@ -16,6 +16,8 @@ public:
 
 	static size_t udp_server_port;
 
+	static FString tcp_server_url;
+
 	static bool bEnableCrypt;
 
 };

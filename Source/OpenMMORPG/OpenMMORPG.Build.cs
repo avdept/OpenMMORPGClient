@@ -15,9 +15,9 @@ public class OpenMMORPG : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Networking", "Sockets" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Networking", "Sockets", "Http" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {"UMG", "Slate", "SlateCore"});
+		PrivateDependencyModuleNames.AddRange(new string[] {"UMG", "Slate", "SlateCore", "Json", "JsonUtilities"});
 
 		string ProtobufPath = Path.Combine(ThirdPartyPath, "protobuf", "include");
 
