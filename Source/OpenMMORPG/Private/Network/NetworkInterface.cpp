@@ -3,9 +3,12 @@
 
 #include "OpenMMORPG/Public/Network/NetworkInterface.h"
 
+#include <memory>
+
 
 
 #include "OpenMMORPG/Network/NetworkConfig.h"
+#include "OpenMMORPG/Network/SocketObject.h"
 #include "ThirdParty/grpc/include/grpcpp/create_channel.h"
 #include "OpenMMORPG/Public/Network/Handlers/MessageEncoder.h"
 #include "OpenMMORPG/Network/Proto/MessageModels.pb.h"
@@ -41,9 +44,7 @@ void UNetworkInterface::SendUDPMessage()
 void UNetworkInterface::SendGRCPMessage()
 {
     
-    
-    auto channel = grpc::CreateChannel(std::string(TCHAR_TO_UTF8(*NetworkConfig::tcp_server_url)), grpc::InsecureChannelCredentials());
-    auto stub = utility_messages::HealthcheckService::NewStub(channel);
+    std::unique_ptr<utility_messages::HealthcheckService::Stub> stub = utility_messages::HealthcheckService::NewStub(USocketObject::GRPCChannel);
     grpc::ClientContext context;
     utility_messages::HealthcheckResult response;
     utility_messages::HealthCheckParams request;

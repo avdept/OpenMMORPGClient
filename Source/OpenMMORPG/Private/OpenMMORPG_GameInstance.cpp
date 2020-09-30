@@ -28,13 +28,13 @@ void UOpenMMORPG_GameInstance::Init()
     //Init listening for UDP
     USocketObject::RunUDPSocketReceiver();
 
-    //FServerStatusCheckingTh::RunServerChecking();
+    FServerStatusCheckingTh::RunServerChecking();
     //FTCPSocketListeningTh::RunSocketListener();
 }
 
 void UOpenMMORPG_GameInstance::Shutdown()
 {
-    //FServerStatusCheckingTh::Shutdown();
+    FServerStatusCheckingTh::Shutdown();
    // FTCPSocketListeningTh::Shutdown();
     // We want to wait a little to make sure all connections are closed. This is kinda of a hack, since its better to implement thread safe singleton
     //while (FServerStatusCheckingTh::IsThreadRunning() || FTCPSocketListeningTh::IsThreadRunning())
@@ -49,7 +49,6 @@ void UOpenMMORPG_GameInstance::OnServerListFetched(bool bSuccess, UHTTPRequestMa
     ERequestResult status)
 {
     UWorldServerManager::ServerList = UWorldServerEntity::FromJSON(RequestManager->Data);
-    auto Request = bSuccess;
     GLog->Log("Server list fetched");
 }
 

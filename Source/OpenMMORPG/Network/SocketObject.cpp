@@ -1,15 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "SocketObject.h"
-
-
 
 #include "NetworkConfig.h"
 #include "google/protobuf/message.h"
 #include "Proto/MessageModels.pb.h"
 #include "Network/Handlers/MessageEncoder.h"
-#include "google/protobuf/port_def.inc"
+#include "grpcpp/create_channel.h"
+#include "Proto/Messages/Grpcs/Healtcheck.grpc.pb.h"
 
 
 FSocket *USocketObject::TCPSocket = nullptr;
@@ -17,6 +15,8 @@ TSharedPtr<FInternetAddr> USocketObject::TCPAddress = nullptr;
 
 bool USocketObject::bIsConnected = false;
 FSocket *USocketObject::UDPSocket = nullptr;
+
+std::shared_ptr<grpc::Channel> USocketObject::GRPCChannel = nullptr;
 
 TSharedPtr<FInternetAddr> USocketObject::UDPAddress = nullptr;
 FUdpSocketReceiver *USocketObject::UDPReceiver = nullptr;
@@ -28,24 +28,29 @@ void USocketObject::InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCP
 {
     const int32 BufferSize = 2 * 1024 * 1024;
 
-    TCPLocalPort = TCPLocalP;
+    GRPCChannel = CreateChannel(std::string(TCHAR_TO_UTF8(*NetworkConfig::tcp_server_url)), grpc::InsecureChannelCredentials());
+
+    // We have an option to connect via TCP directly, bypassing http/2 from GRPC. You can uncomment following code
+    // to get access to USocketObject::TCPSocket
+    
+    //TCPLocalPort = TCPLocalP;
     UDPLocalPort = UDPLocalP;
 
-    TCPSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("TCP_SOCKET"), false);
-    TCPAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
+    //TCPSocket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("TCP_SOCKET"), false);
+    //TCPAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
 
 
-    TCPSocket->SetLinger(false);
+    //TCPSocket->SetLinger(false);
     FIPv4Address ServerIP;
     FIPv4Address::Parse(ServerAddress, ServerIP);
 
     // TCP
 
-    TCPAddress->SetIp(ServerIP.Value);
-    TCPAddress->SetPort(TCPServerP);
+    //TCPAddress->SetIp(ServerIP.Value);
+    //TCPAddress->SetPort(TCPServerP);
 
-    TCPSocket->Connect(*TCPAddress);
-    TCPSocket->SetNoDelay(true);
+    //TCPSocket->Connect(*TCPAddress);
+    //TCPSocket->SetNoDelay(true);
     // UDP
 
     UDPAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
@@ -114,10 +119,21 @@ void USocketObject::Reconnect()
 
 bool USocketObject::Alive()
 {
-    std::shared_ptr<Utility> utility(new Utility);
-    utility->set_alive(true);
-    
-    return UMessageEncoder::Send(utility.get(), false, true);
+    std::unique_ptr<utility_messages::HealthcheckService::Stub> stub = utility_messages::HealthcheckService::NewStub(GRPCChannel);
+    grpc::ClientContext context;
+    utility_messages::HealthcheckResult response;
+    utility_messages::HealthCheckParams request;
+
+
+    grpc::Status status = stub->RunCheck(&context, request, &response);
+    if (status.ok())
+    {
+        GLog->Log("Game Server alive");
+        return true;
+    }
+
+    GLog->Log("Game Server offline");
+    return false;   
 }
 
 void USocketObject::RunUDPSocketReceiver()
@@ -166,14 +182,14 @@ bool USocketObject::ReadDelimitedFrom(google::protobuf::io::CodedInputStream *in
 
 void USocketObject::Shutdown()
 {
-    if (TCPSocket != nullptr)
-    {
-        GLog->Log("Closing sockets");
-        TCPSocket->Close();
-        ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(TCPSocket);
-        TCPSocket = nullptr;
+    //if (TCPSocket != nullptr)
+    //{
+    //    GLog->Log("Closing sockets");
+    //    TCPSocket->Close();
+    //    ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(TCPSocket);
+    //    TCPSocket = nullptr;
         
-    }
+    //}
 
     if (UDPSocket != nullptr)
     {

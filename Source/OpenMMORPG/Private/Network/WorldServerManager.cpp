@@ -4,7 +4,7 @@
 #include "OpenMMORPG/Public/Network/WorldServerEntity.h"
 
 
-TArray<UWorldServerEntity*> UWorldServerManager::ServerList;
+TArray<UWorldServerEntity*> UWorldServerManager::ServerList  = {};
 
 TArray<UWorldServerEntity*> UWorldServerManager::GetListOfServers()
 {

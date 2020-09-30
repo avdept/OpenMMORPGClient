@@ -25,6 +25,7 @@ public:
 	virtual void Init() override;
 	virtual void Shutdown() override;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TArray<UServerListItem*> ServerListItemItems;
 
 	UFUNCTION(BlueprintCallable)

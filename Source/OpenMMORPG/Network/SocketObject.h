@@ -7,6 +7,7 @@
 #include "Networking.h"
 #include "SocketSubsystem.h"
 #include "google/protobuf/message.h"
+#include "grpcpp/create_channel.h"
 
 #include "SocketObject.generated.h"
 
@@ -33,6 +34,8 @@ public:
 	static void Recv(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4Endpoint& EndPt);
 
 
+	static std::shared_ptr<grpc::Channel>  GRPCChannel;
+
 	//UDP
 
 	static FSocket *UDPSocket;
@@ -41,7 +44,7 @@ public:
 
 	static FUdpSocketReceiver *UDPReceiver;
 
-		static int32 TCPLocalPort;
+	static int32 TCPLocalPort;
 	static int32 UDPLocalPort;
 
 	static void InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCPServerP, int32 UDPLocalP, int32 UDPServerP);
