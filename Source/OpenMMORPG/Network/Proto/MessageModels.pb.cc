@@ -14,32 +14,28 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
-extern PROTOBUF_INTERNAL_EXPORT_MessageModels_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_CryptogramWrapper_MessageModels_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_RegLogModels_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_InputChecking_RegLogModels_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_RegLogModels_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Login_RegLogModels_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_RegLogModels_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Registration_RegLogModels_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_UtilityModels_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Utility_UtilityModels_2eproto;
-class CryptogramWrapperDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<CryptogramWrapper> _instance;
-} _CryptogramWrapper_default_instance_;
+extern PROTOBUF_INTERNAL_EXPORT_MessageModels_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Utility_MessageModels_2eproto;
 class WrapperDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Wrapper> _instance;
 } _Wrapper_default_instance_;
-static void InitDefaultsscc_info_CryptogramWrapper_MessageModels_2eproto() {
+class UtilityDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Utility> _instance;
+} _Utility_default_instance_;
+static void InitDefaultsscc_info_Utility_MessageModels_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::_CryptogramWrapper_default_instance_;
-    new (ptr) ::CryptogramWrapper();
+    void* ptr = &::_Utility_default_instance_;
+    new (ptr) ::Utility();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::CryptogramWrapper::InitAsDefaultInstance();
+  ::Utility::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_CryptogramWrapper_MessageModels_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_CryptogramWrapper_MessageModels_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Utility_MessageModels_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Utility_MessageModels_2eproto}, {}};
 
 static void InitDefaultsscc_info_Wrapper_MessageModels_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -52,13 +48,9 @@ static void InitDefaultsscc_info_Wrapper_MessageModels_2eproto() {
   ::Wrapper::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<5> scc_info_Wrapper_MessageModels_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 5, 0, InitDefaultsscc_info_Wrapper_MessageModels_2eproto}, {
-      &scc_info_Utility_UtilityModels_2eproto.base,
-      &scc_info_InputChecking_RegLogModels_2eproto.base,
-      &scc_info_Registration_RegLogModels_2eproto.base,
-      &scc_info_Login_RegLogModels_2eproto.base,
-      &scc_info_CryptogramWrapper_MessageModels_2eproto.base,}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Wrapper_MessageModels_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_Wrapper_MessageModels_2eproto}, {
+      &scc_info_Utility_MessageModels_2eproto.base,}};
 
 static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_MessageModels_2eproto[2];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_MessageModels_2eproto = nullptr;
@@ -66,63 +58,45 @@ static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_s
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_MessageModels_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::CryptogramWrapper, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::CryptogramWrapper, registration_),
-  PROTOBUF_FIELD_OFFSET(::CryptogramWrapper, login_),
-  PROTOBUF_FIELD_OFFSET(::CryptogramWrapper, initialstate_),
-  PROTOBUF_FIELD_OFFSET(::CryptogramWrapper, room_),
-  PROTOBUF_FIELD_OFFSET(::CryptogramWrapper, mainmenu_),
-  PROTOBUF_FIELD_OFFSET(::CryptogramWrapper, gamemodels_),
-  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Wrapper, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::Wrapper, utility_),
-  PROTOBUF_FIELD_OFFSET(::Wrapper, inputchecking_),
-  PROTOBUF_FIELD_OFFSET(::Wrapper, registration_),
-  PROTOBUF_FIELD_OFFSET(::Wrapper, login_),
-  PROTOBUF_FIELD_OFFSET(::Wrapper, cryptogramwrapper_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Utility, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::Utility, alive_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::CryptogramWrapper)},
-  { 11, -1, sizeof(::Wrapper)},
+  { 0, -1, sizeof(::Wrapper)},
+  { 6, -1, sizeof(::Utility)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_CryptogramWrapper_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Wrapper_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Utility_default_instance_),
 };
 
 const char descriptor_table_protodef_MessageModels_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\023MessageModels.proto\032\023UtilityModels.pro"
-  "to\032\022RegLogModels.proto\032\025DisableWarnings."
-  "proto\"\202\001\n\021CryptogramWrapper\022\024\n\014registrat"
-  "ion\030\001 \001(\014\022\r\n\005login\030\002 \001(\014\022\024\n\014initialState"
-  "\030\003 \001(\014\022\014\n\004room\030\004 \001(\014\022\020\n\010mainMenu\030\005 \001(\014\022\022"
-  "\n\ngameModels\030\006 \001(\014\"\266\001\n\007Wrapper\022\031\n\007utilit"
-  "y\030\001 \001(\0132\010.Utility\022%\n\rinputChecking\030\002 \001(\013"
-  "2\016.InputChecking\022#\n\014registration\030\003 \001(\0132\r"
-  ".Registration\022\025\n\005login\030\004 \001(\0132\006.Login\022-\n\021"
-  "cryptogramWrapper\030\005 \001(\0132\022.CryptogramWrap"
-  "perB\006Z\004mainb\006proto3"
+  "\n\023MessageModels.proto\032\025DisableWarnings.p"
+  "roto\"$\n\007Wrapper\022\031\n\007utility\030\001 \001(\0132\010.Utili"
+  "ty\"\030\n\007Utility\022\r\n\005alive\030\001 \001(\010B\006Z\004mainb\006pr"
+  "oto3"
   ;
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_MessageModels_2eproto_deps[3] = {
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_MessageModels_2eproto_deps[1] = {
   &::descriptor_table_DisableWarnings_2eproto,
-  &::descriptor_table_RegLogModels_2eproto,
-  &::descriptor_table_UtilityModels_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_MessageModels_2eproto_sccs[2] = {
-  &scc_info_CryptogramWrapper_MessageModels_2eproto.base,
+  &scc_info_Utility_MessageModels_2eproto.base,
   &scc_info_Wrapper_MessageModels_2eproto.base,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_MessageModels_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_MessageModels_2eproto = {
-  false, false, descriptor_table_protodef_MessageModels_2eproto, "MessageModels.proto", 419,
-  &descriptor_table_MessageModels_2eproto_once, descriptor_table_MessageModels_2eproto_sccs, descriptor_table_MessageModels_2eproto_deps, 2, 3,
+  false, false, descriptor_table_protodef_MessageModels_2eproto, "MessageModels.proto", 124,
+  &descriptor_table_MessageModels_2eproto_once, descriptor_table_MessageModels_2eproto_sccs, descriptor_table_MessageModels_2eproto_deps, 2, 1,
   schemas, file_default_instances, TableStruct_MessageModels_2eproto::offsets,
   file_level_metadata_MessageModels_2eproto, 2, file_level_enum_descriptors_MessageModels_2eproto, file_level_service_descriptors_MessageModels_2eproto,
 };
@@ -132,439 +106,18 @@ static bool dynamic_init_dummy_MessageModels_2eproto = (static_cast<void>(::PROT
 
 // ===================================================================
 
-void CryptogramWrapper::InitAsDefaultInstance() {
-}
-class CryptogramWrapper::_Internal {
- public:
-};
-
-CryptogramWrapper::CryptogramWrapper(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
-  // @@protoc_insertion_point(arena_constructor:CryptogramWrapper)
-}
-CryptogramWrapper::CryptogramWrapper(const CryptogramWrapper& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  registration_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_registration().empty()) {
-    registration_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_registration(),
-      GetArena());
-  }
-  login_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_login().empty()) {
-    login_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_login(),
-      GetArena());
-  }
-  initialstate_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_initialstate().empty()) {
-    initialstate_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_initialstate(),
-      GetArena());
-  }
-  room_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_room().empty()) {
-    room_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_room(),
-      GetArena());
-  }
-  mainmenu_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_mainmenu().empty()) {
-    mainmenu_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_mainmenu(),
-      GetArena());
-  }
-  gamemodels_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_gamemodels().empty()) {
-    gamemodels_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_gamemodels(),
-      GetArena());
-  }
-  // @@protoc_insertion_point(copy_constructor:CryptogramWrapper)
-}
-
-void CryptogramWrapper::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_CryptogramWrapper_MessageModels_2eproto.base);
-  registration_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  login_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  initialstate_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  room_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  mainmenu_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  gamemodels_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-
-CryptogramWrapper::~CryptogramWrapper() {
-  // @@protoc_insertion_point(destructor:CryptogramWrapper)
-  SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-void CryptogramWrapper::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
-  registration_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  login_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  initialstate_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  room_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  mainmenu_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  gamemodels_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-
-void CryptogramWrapper::ArenaDtor(void* object) {
-  CryptogramWrapper* _this = reinterpret_cast< CryptogramWrapper* >(object);
-  (void)_this;
-}
-void CryptogramWrapper::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
-void CryptogramWrapper::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const CryptogramWrapper& CryptogramWrapper::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_CryptogramWrapper_MessageModels_2eproto.base);
-  return *internal_default_instance();
-}
-
-
-void CryptogramWrapper::Clear() {
-// @@protoc_insertion_point(message_clear_start:CryptogramWrapper)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  registration_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  login_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  initialstate_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  room_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  mainmenu_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  gamemodels_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-const char* CryptogramWrapper::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
-    switch (tag >> 3) {
-      // bytes registration = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          auto str = _internal_mutable_registration();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // bytes login = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          auto str = _internal_mutable_login();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // bytes initialState = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
-          auto str = _internal_mutable_initialstate();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // bytes room = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
-          auto str = _internal_mutable_room();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // bytes mainMenu = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
-          auto str = _internal_mutable_mainmenu();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // bytes gameModels = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 50)) {
-          auto str = _internal_mutable_gamemodels();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
-}
-
-::PROTOBUF_NAMESPACE_ID::uint8* CryptogramWrapper::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:CryptogramWrapper)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // bytes registration = 1;
-  if (this->registration().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        1, this->_internal_registration(), target);
-  }
-
-  // bytes login = 2;
-  if (this->login().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        2, this->_internal_login(), target);
-  }
-
-  // bytes initialState = 3;
-  if (this->initialstate().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        3, this->_internal_initialstate(), target);
-  }
-
-  // bytes room = 4;
-  if (this->room().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        4, this->_internal_room(), target);
-  }
-
-  // bytes mainMenu = 5;
-  if (this->mainmenu().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        5, this->_internal_mainmenu(), target);
-  }
-
-  // bytes gameModels = 6;
-  if (this->gamemodels().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        6, this->_internal_gamemodels(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:CryptogramWrapper)
-  return target;
-}
-
-size_t CryptogramWrapper::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:CryptogramWrapper)
-  size_t total_size = 0;
-
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // bytes registration = 1;
-  if (this->registration().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_registration());
-  }
-
-  // bytes login = 2;
-  if (this->login().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_login());
-  }
-
-  // bytes initialState = 3;
-  if (this->initialstate().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_initialstate());
-  }
-
-  // bytes room = 4;
-  if (this->room().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_room());
-  }
-
-  // bytes mainMenu = 5;
-  if (this->mainmenu().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_mainmenu());
-  }
-
-  // bytes gameModels = 6;
-  if (this->gamemodels().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_gamemodels());
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
-}
-
-void CryptogramWrapper::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:CryptogramWrapper)
-  GOOGLE_DCHECK_NE(&from, this);
-  const CryptogramWrapper* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<CryptogramWrapper>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:CryptogramWrapper)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:CryptogramWrapper)
-    MergeFrom(*source);
-  }
-}
-
-void CryptogramWrapper::MergeFrom(const CryptogramWrapper& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:CryptogramWrapper)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from.registration().size() > 0) {
-    _internal_set_registration(from._internal_registration());
-  }
-  if (from.login().size() > 0) {
-    _internal_set_login(from._internal_login());
-  }
-  if (from.initialstate().size() > 0) {
-    _internal_set_initialstate(from._internal_initialstate());
-  }
-  if (from.room().size() > 0) {
-    _internal_set_room(from._internal_room());
-  }
-  if (from.mainmenu().size() > 0) {
-    _internal_set_mainmenu(from._internal_mainmenu());
-  }
-  if (from.gamemodels().size() > 0) {
-    _internal_set_gamemodels(from._internal_gamemodels());
-  }
-}
-
-void CryptogramWrapper::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:CryptogramWrapper)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void CryptogramWrapper::CopyFrom(const CryptogramWrapper& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:CryptogramWrapper)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool CryptogramWrapper::IsInitialized() const {
-  return true;
-}
-
-void CryptogramWrapper::InternalSwap(CryptogramWrapper* other) {
-  using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  registration_.Swap(&other->registration_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  login_.Swap(&other->login_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  initialstate_.Swap(&other->initialstate_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  room_.Swap(&other->room_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  mainmenu_.Swap(&other->mainmenu_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  gamemodels_.Swap(&other->gamemodels_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata CryptogramWrapper::GetMetadata() const {
-  return GetMetadataStatic();
-}
-
-
-// ===================================================================
-
 void Wrapper::InitAsDefaultInstance() {
   ::_Wrapper_default_instance_._instance.get_mutable()->utility_ = const_cast< ::Utility*>(
       ::Utility::internal_default_instance());
-  ::_Wrapper_default_instance_._instance.get_mutable()->inputchecking_ = const_cast< ::InputChecking*>(
-      ::InputChecking::internal_default_instance());
-  ::_Wrapper_default_instance_._instance.get_mutable()->registration_ = const_cast< ::Registration*>(
-      ::Registration::internal_default_instance());
-  ::_Wrapper_default_instance_._instance.get_mutable()->login_ = const_cast< ::Login*>(
-      ::Login::internal_default_instance());
-  ::_Wrapper_default_instance_._instance.get_mutable()->cryptogramwrapper_ = const_cast< ::CryptogramWrapper*>(
-      ::CryptogramWrapper::internal_default_instance());
 }
 class Wrapper::_Internal {
  public:
   static const ::Utility& utility(const Wrapper* msg);
-  static const ::InputChecking& inputchecking(const Wrapper* msg);
-  static const ::Registration& registration(const Wrapper* msg);
-  static const ::Login& login(const Wrapper* msg);
-  static const ::CryptogramWrapper& cryptogramwrapper(const Wrapper* msg);
 };
 
 const ::Utility&
 Wrapper::_Internal::utility(const Wrapper* msg) {
   return *msg->utility_;
-}
-const ::InputChecking&
-Wrapper::_Internal::inputchecking(const Wrapper* msg) {
-  return *msg->inputchecking_;
-}
-const ::Registration&
-Wrapper::_Internal::registration(const Wrapper* msg) {
-  return *msg->registration_;
-}
-const ::Login&
-Wrapper::_Internal::login(const Wrapper* msg) {
-  return *msg->login_;
-}
-const ::CryptogramWrapper&
-Wrapper::_Internal::cryptogramwrapper(const Wrapper* msg) {
-  return *msg->cryptogramwrapper_;
-}
-void Wrapper::clear_utility() {
-  if (GetArena() == nullptr && utility_ != nullptr) {
-    delete utility_;
-  }
-  utility_ = nullptr;
-}
-void Wrapper::clear_inputchecking() {
-  if (GetArena() == nullptr && inputchecking_ != nullptr) {
-    delete inputchecking_;
-  }
-  inputchecking_ = nullptr;
-}
-void Wrapper::clear_registration() {
-  if (GetArena() == nullptr && registration_ != nullptr) {
-    delete registration_;
-  }
-  registration_ = nullptr;
-}
-void Wrapper::clear_login() {
-  if (GetArena() == nullptr && login_ != nullptr) {
-    delete login_;
-  }
-  login_ = nullptr;
 }
 Wrapper::Wrapper(::PROTOBUF_NAMESPACE_ID::Arena* arena)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
@@ -580,34 +133,12 @@ Wrapper::Wrapper(const Wrapper& from)
   } else {
     utility_ = nullptr;
   }
-  if (from._internal_has_inputchecking()) {
-    inputchecking_ = new ::InputChecking(*from.inputchecking_);
-  } else {
-    inputchecking_ = nullptr;
-  }
-  if (from._internal_has_registration()) {
-    registration_ = new ::Registration(*from.registration_);
-  } else {
-    registration_ = nullptr;
-  }
-  if (from._internal_has_login()) {
-    login_ = new ::Login(*from.login_);
-  } else {
-    login_ = nullptr;
-  }
-  if (from._internal_has_cryptogramwrapper()) {
-    cryptogramwrapper_ = new ::CryptogramWrapper(*from.cryptogramwrapper_);
-  } else {
-    cryptogramwrapper_ = nullptr;
-  }
   // @@protoc_insertion_point(copy_constructor:Wrapper)
 }
 
 void Wrapper::SharedCtor() {
   ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Wrapper_MessageModels_2eproto.base);
-  ::memset(&utility_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&cryptogramwrapper_) -
-      reinterpret_cast<char*>(&utility_)) + sizeof(cryptogramwrapper_));
+  utility_ = nullptr;
 }
 
 Wrapper::~Wrapper() {
@@ -619,10 +150,6 @@ Wrapper::~Wrapper() {
 void Wrapper::SharedDtor() {
   GOOGLE_DCHECK(GetArena() == nullptr);
   if (this != internal_default_instance()) delete utility_;
-  if (this != internal_default_instance()) delete inputchecking_;
-  if (this != internal_default_instance()) delete registration_;
-  if (this != internal_default_instance()) delete login_;
-  if (this != internal_default_instance()) delete cryptogramwrapper_;
 }
 
 void Wrapper::ArenaDtor(void* object) {
@@ -650,22 +177,6 @@ void Wrapper::Clear() {
     delete utility_;
   }
   utility_ = nullptr;
-  if (GetArena() == nullptr && inputchecking_ != nullptr) {
-    delete inputchecking_;
-  }
-  inputchecking_ = nullptr;
-  if (GetArena() == nullptr && registration_ != nullptr) {
-    delete registration_;
-  }
-  registration_ = nullptr;
-  if (GetArena() == nullptr && login_ != nullptr) {
-    delete login_;
-  }
-  login_ = nullptr;
-  if (GetArena() == nullptr && cryptogramwrapper_ != nullptr) {
-    delete cryptogramwrapper_;
-  }
-  cryptogramwrapper_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -681,34 +192,6 @@ const char* Wrapper::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
           ptr = ctx->ParseMessage(_internal_mutable_utility(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // .InputChecking inputChecking = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          ptr = ctx->ParseMessage(_internal_mutable_inputchecking(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // .Registration registration = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
-          ptr = ctx->ParseMessage(_internal_mutable_registration(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // .Login login = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
-          ptr = ctx->ParseMessage(_internal_mutable_login(), ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // .CryptogramWrapper cryptogramWrapper = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
-          ptr = ctx->ParseMessage(_internal_mutable_cryptogramwrapper(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -748,38 +231,6 @@ failure:
         1, _Internal::utility(this), target, stream);
   }
 
-  // .InputChecking inputChecking = 2;
-  if (this->has_inputchecking()) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        2, _Internal::inputchecking(this), target, stream);
-  }
-
-  // .Registration registration = 3;
-  if (this->has_registration()) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        3, _Internal::registration(this), target, stream);
-  }
-
-  // .Login login = 4;
-  if (this->has_login()) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        4, _Internal::login(this), target, stream);
-  }
-
-  // .CryptogramWrapper cryptogramWrapper = 5;
-  if (this->has_cryptogramwrapper()) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        5, _Internal::cryptogramwrapper(this), target, stream);
-  }
-
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -801,34 +252,6 @@ size_t Wrapper::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *utility_);
-  }
-
-  // .InputChecking inputChecking = 2;
-  if (this->has_inputchecking()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *inputchecking_);
-  }
-
-  // .Registration registration = 3;
-  if (this->has_registration()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *registration_);
-  }
-
-  // .Login login = 4;
-  if (this->has_login()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *login_);
-  }
-
-  // .CryptogramWrapper cryptogramWrapper = 5;
-  if (this->has_cryptogramwrapper()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *cryptogramwrapper_);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -865,18 +288,6 @@ void Wrapper::MergeFrom(const Wrapper& from) {
   if (from.has_utility()) {
     _internal_mutable_utility()->::Utility::MergeFrom(from._internal_utility());
   }
-  if (from.has_inputchecking()) {
-    _internal_mutable_inputchecking()->::InputChecking::MergeFrom(from._internal_inputchecking());
-  }
-  if (from.has_registration()) {
-    _internal_mutable_registration()->::Registration::MergeFrom(from._internal_registration());
-  }
-  if (from.has_login()) {
-    _internal_mutable_login()->::Login::MergeFrom(from._internal_login());
-  }
-  if (from.has_cryptogramwrapper()) {
-    _internal_mutable_cryptogramwrapper()->::CryptogramWrapper::MergeFrom(from._internal_cryptogramwrapper());
-  }
 }
 
 void Wrapper::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -900,12 +311,7 @@ bool Wrapper::IsInitialized() const {
 void Wrapper::InternalSwap(Wrapper* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Wrapper, cryptogramwrapper_)
-      + sizeof(Wrapper::cryptogramwrapper_)
-      - PROTOBUF_FIELD_OFFSET(Wrapper, utility_)>(
-          reinterpret_cast<char*>(&utility_),
-          reinterpret_cast<char*>(&other->utility_));
+  swap(utility_, other->utility_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Wrapper::GetMetadata() const {
@@ -913,13 +319,208 @@ void Wrapper::InternalSwap(Wrapper* other) {
 }
 
 
+// ===================================================================
+
+void Utility::InitAsDefaultInstance() {
+}
+class Utility::_Internal {
+ public:
+};
+
+Utility::Utility(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:Utility)
+}
+Utility::Utility(const Utility& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  alive_ = from.alive_;
+  // @@protoc_insertion_point(copy_constructor:Utility)
+}
+
+void Utility::SharedCtor() {
+  alive_ = false;
+}
+
+Utility::~Utility() {
+  // @@protoc_insertion_point(destructor:Utility)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void Utility::SharedDtor() {
+  GOOGLE_DCHECK(GetArena() == nullptr);
+}
+
+void Utility::ArenaDtor(void* object) {
+  Utility* _this = reinterpret_cast< Utility* >(object);
+  (void)_this;
+}
+void Utility::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void Utility::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const Utility& Utility::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Utility_MessageModels_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void Utility::Clear() {
+// @@protoc_insertion_point(message_clear_start:Utility)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  alive_ = false;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* Utility::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // bool alive = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          alive_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* Utility::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Utility)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // bool alive = 1;
+  if (this->alive() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(1, this->_internal_alive(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Utility)
+  return target;
+}
+
+size_t Utility::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Utility)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // bool alive = 1;
+  if (this->alive() != 0) {
+    total_size += 1 + 1;
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Utility::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:Utility)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Utility* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Utility>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:Utility)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:Utility)
+    MergeFrom(*source);
+  }
+}
+
+void Utility::MergeFrom(const Utility& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:Utility)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.alive() != 0) {
+    _internal_set_alive(from._internal_alive());
+  }
+}
+
+void Utility::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:Utility)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Utility::CopyFrom(const Utility& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Utility)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Utility::IsInitialized() const {
+  return true;
+}
+
+void Utility::InternalSwap(Utility* other) {
+  using std::swap;
+  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  swap(alive_, other->alive_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata Utility::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
 // @@protoc_insertion_point(namespace_scope)
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::CryptogramWrapper* Arena::CreateMaybeMessage< ::CryptogramWrapper >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::CryptogramWrapper >(arena);
-}
 template<> PROTOBUF_NOINLINE ::Wrapper* Arena::CreateMaybeMessage< ::Wrapper >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Wrapper >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Utility* Arena::CreateMaybeMessage< ::Utility >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Utility >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

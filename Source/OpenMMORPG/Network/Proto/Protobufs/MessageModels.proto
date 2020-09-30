@@ -3,23 +3,15 @@
 option go_package = "main";
 
 
-import "UtilityModels.proto";
-import "RegLogModels.proto";
+
 import "DisableWarnings.proto";
 
-message CryptogramWrapper {
-  bytes registration = 1;
-  bytes login = 2;
-  bytes initialState	= 3;
-  bytes room = 4;
-  bytes mainMenu 	= 5;
-  bytes gameModels = 6;
-}
+
 
 message Wrapper {
   Utility utility = 1;
-  InputChecking inputChecking = 2;
-  Registration registration = 3;
-  Login login = 4;
-  CryptogramWrapper cryptogramWrapper = 5;
+}
+
+message Utility {
+  bool alive = 1;
 }

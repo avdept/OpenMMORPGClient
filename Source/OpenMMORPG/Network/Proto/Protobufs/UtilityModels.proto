@@ -1,9 +1,0 @@
-﻿syntax = "proto3";
-
-option go_package = "main";
-
-import "DisableWarnings.proto";
-
-message Utility {
-  bool alive = 1;
-}

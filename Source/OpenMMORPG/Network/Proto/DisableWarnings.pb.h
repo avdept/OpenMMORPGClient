@@ -10,6 +10,9 @@
 #pragma warning(disable:4389)
 #pragma warning(disable:4800)
 #pragma warning(disable:4946)
+#pragma warning(disable:4668)
+#pragma warning(disable:4582)
+#pragma warning(disable:4583)
 
 #ifndef GOOGLE_PROTOBUF_INCLUDED_DisableWarnings_2eproto
 #define GOOGLE_PROTOBUF_INCLUDED_DisableWarnings_2eproto

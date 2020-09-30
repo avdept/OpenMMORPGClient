@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package utility_messages;
+
+option go_package="github.com/avdept/OpenMMORPG_Server/protos";
+
+message HealthcheckResult {
+  bool Alive = 1;
+}
+
+message HealthCheckParams {
+}
+
+service HealthcheckService {
+  rpc RunCheck(HealthCheckParams) returns (HealthcheckResult) {};
+}

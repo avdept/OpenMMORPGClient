@@ -28,8 +28,8 @@ bool UMessageEncoder::Send(google::protobuf::Message* Message, bool bCrypt, bool
             wrapper.set_allocated_utility(mes);
         } else if (Message->GetTypeName() == "Registration")
         {
-            Registration *mes = static_cast<Registration*>(Message);
-            wrapper.set_allocated_registration(mes);
+           // Registration *mes = static_cast<Registration*>(Message);
+           // wrapper.set_allocated_registration(mes);
         }
     }
 
@@ -49,10 +49,10 @@ bool UMessageEncoder::Send(google::protobuf::Message* Message, bool bCrypt, bool
         wrapper.release_utility();
     }
 
-    if (wrapper.has_registration())
-    {
-        wrapper.release_registration();
-    }
+    //if (wrapper.has_registration())
+    //{
+    //    wrapper.release_registration();
+    //}
 
     uint8_t *DelimitedBuffer = Output.GetDirectBufferForNBytesAndAdvance(size);
 
