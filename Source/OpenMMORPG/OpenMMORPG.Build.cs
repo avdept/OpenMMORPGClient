@@ -23,7 +23,7 @@ public class OpenMMORPG : ModuleRules
 
 		PublicIncludePaths.Add(ProtobufPath);
 		AddEngineThirdPartyPrivateStaticDependencies(Target, "zlib");
-		
+
 		PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "openssl", "include"));
 		PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "grpc", "include"));
 
@@ -33,15 +33,15 @@ public class OpenMMORPG : ModuleRules
 			string ProtobufLibrariesPath = Path.Combine(ThirdPartyPath, "protobuf", "lib", "Win64");
 			string OpenSSLLibrariesPath = Path.Combine(ThirdPartyPath, "openssl", "lib");
 			string GrpcLibrariesPath = Path.Combine(ThirdPartyPath, "grpc", "lib", "Win64");
-			
-			
+
+
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "address_sorting.lib"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "cares.lib"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "gpr.lib"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "grpc.lib"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "grpc++.lib"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "upb.lib"));
-			
+
 			PublicAdditionalLibraries.Add(Path.Combine(ProtobufLibrariesPath, "libprotobuf.lib"));
 			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "libcrypto.lib"));
 			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "libssl.lib"));
@@ -50,13 +50,23 @@ public class OpenMMORPG : ModuleRules
 		}
 
 		if (Target.Platform == UnrealTargetPlatform.Mac) {
+
+			string GrpcLibrariesPath = Path.Combine(ThirdPartyPath, "grpc", "lib", "Mac");
 			string ProtobufLibrariesPath = Path.Combine(ThirdPartyPath, "protobuf", "lib", "Mac");
 			string OpenSSLLibrariesPath = Path.Combine(ThirdPartyPath, "openssl", "lib", "Mac");
+			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libaddress_sorting.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libcares.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libgpr.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libgrpc.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libgrpc++.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libupb.a"));
+
+
 			PublicAdditionalLibraries.Add(Path.Combine(ProtobufLibrariesPath, "libprotobuf.a"));
 			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "libcrypto.1.1.dylib"));
 			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "libssl.1.1.dylib"));
 		}
-		
+
 		PublicDefinitions.Add("GOOGLE_PROTOBUF_NO_RTTI=1");
 		PublicDefinitions.Add("GOOGLE_PROTOBUF_USE_UNALIGNED=0");
 		PublicDefinitions.Add("GPR_FORBID_UNREACHABLE_CODE=0");

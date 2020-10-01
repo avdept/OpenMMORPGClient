@@ -32,7 +32,7 @@ void USocketObject::InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCP
 
     // We have an option to connect via TCP directly, bypassing http/2 from GRPC. You can uncomment following code
     // to get access to USocketObject::TCPSocket
-    
+
     //TCPLocalPort = TCPLocalP;
     UDPLocalPort = UDPLocalP;
 
@@ -60,19 +60,23 @@ void USocketObject::InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCP
     UDPAddress->SetIp(ServerIP.Value);
     UDPAddress->SetPort(UDPServerP);
 
-    UDPSocket = FUdpSocketBuilder(TEXT("UDP_SOCKET2"))  
-    .AsReusable()
-    .BoundToPort(UDPServerP)
-    .WithBroadcast()
-    .WithReceiveBufferSize(BufferSize)
-    .WithSendBufferSize(BufferSize)
-    .Build();
+
+    UDPSocket = FUdpSocketBuilder(TEXT("UDP_SOCKET"))
+        .AsReusable()
+        .BoundToPort(UDPServerP)
+        .WithBroadcast()
+        .WithReceiveBufferSize(BufferSize)
+        .WithSendBufferSize(BufferSize)
+        .Build();
 
     bIsConnected = Alive();
 }
 
 bool USocketObject::SendByUDP(google::protobuf::Message *message)
 {
+
+    if (UDPSocket == nullptr) return false;
+
     Wrapper wrapper;
 
     if (message->GetTypeName() == "Utility")
@@ -81,7 +85,7 @@ bool USocketObject::SendByUDP(google::protobuf::Message *message)
         wrapper.set_allocated_utility(mes);
     }
 
-   
+
     size_t size = wrapper.ByteSizeLong() + 5;
     uint8_t *buffer = new uint8_t[size];
 
@@ -102,7 +106,7 @@ bool USocketObject::SendByUDP(google::protobuf::Message *message)
     const bool sentState = UDPSocket->SendTo(buffer, output.ByteCount(), bytesSent, *UDPAddress);
     delete []buffer;
     return sentState;
-    
+
 }
 
 void USocketObject::Reconnect()
@@ -133,18 +137,28 @@ bool USocketObject::Alive()
     }
 
     GLog->Log("Game Server offline");
-    return false;   
+    return false;
 }
 
 void USocketObject::RunUDPSocketReceiver()
 {
+    if (UDPSocket == nullptr) return;
     GLog->Log("Listening from UDP socket");
+    UDPSocket;
     const FTimespan ThreadWaitTime = FTimespan::FromMilliseconds(30);
 
-    UDPReceiver = new FUdpSocketReceiver(UDPSocket, ThreadWaitTime, TEXT("UDP Receiver"));
 
-    UDPReceiver->OnDataReceived().BindStatic(&USocketObject::Recv);
-    UDPReceiver->Start();
+    try {
+        UDPReceiver = new FUdpSocketReceiver(UDPSocket, ThreadWaitTime, TEXT("UDP Receiver"));
+        UDPReceiver->OnDataReceived().BindStatic(&USocketObject::Recv);
+        UDPReceiver->Start();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+
 }
 
 void USocketObject::Recv(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4Endpoint& EndPt)
@@ -188,16 +202,16 @@ void USocketObject::Shutdown()
     //    TCPSocket->Close();
     //    ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(TCPSocket);
     //    TCPSocket = nullptr;
-        
+
     //}
 
     if (UDPSocket != nullptr)
     {
         if (UDPReceiver != nullptr)
         {
-            UDPReceiver->Stop();    
+            UDPReceiver->Stop();
         }
-        FPlatformProcess::Sleep(1.1f); 
+        FPlatformProcess::Sleep(1.1f);
         UDPSocket->Close();
         GLog->Log("UDP Socket closed");
         delete UDPSocket;
