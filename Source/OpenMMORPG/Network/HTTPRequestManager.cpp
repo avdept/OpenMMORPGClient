@@ -34,10 +34,10 @@ UHTTPRequestManager* UHTTPRequestManager::Create()
 }
 
 UHTTPRequestManager* UHTTPRequestManager::GetRequest(const FString &url) {
-    
 
-    
-    TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+
+
+    auto HttpRequest = FHttpModule::Get().CreateRequest();
     HttpRequest->SetHeader("Authorization", "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJvcGVubW1vcnBnX2xvZ2luc2VydmVyIiwiZXhwIjoxNjAzNjQ0OTY5LCJpYXQiOjE2MDEyMjU3NjksImlzcyI6Im9wZW5tbW9ycGdfbG9naW5zZXJ2ZXIiLCJqdGkiOiJlOThlY2EyNS1lYzMzLTQ4YzgtYWQ5NS0wYzBhY2MzNGJmYzkiLCJuYmYiOjE2MDEyMjU3NjgsInN1YiI6IjEiLCJ0eXAiOiJhY2Nlc3MifQ.NdB7dU71-yXdwx-hzxsKHRl0GumBwwUGodOHtefbxlwLtq_FfXL8o9bAaCM9nJgGdzrAhPzGcf2ju08pxjYMpQ");
     HttpRequest->SetVerb("GET");
     HttpRequest->SetURL(CreateUrl(url));
@@ -79,8 +79,12 @@ void UHTTPRequestManager::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Resp
 {
     RemoveFromRoot();
     if (!bWasSuccessful) {
-        UE_LOG(LogJson, Error, TEXT("Response was invalid! Please check the URL. Error: %i"), Response->GetResponseCode());
-		
+        if (Response->GetResponseCode()) {
+            UE_LOG(LogJson, Error, TEXT("Response was invalid! Please check the URL. Error: %i"), Response->GetResponseCode());
+        } else {
+            UE_LOG(LogJson, Error, TEXT("No Response. Make sure server available at provided URL"));
+        }
+
         // Broadcast the failed event
         Request_OnFinished.Broadcast(false, this, ERequestResult::HttpFailed);
         return;
@@ -95,8 +99,8 @@ void UHTTPRequestManager::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Resp
     if (Request_OnFinished.IsBound())
     {
         GLog->Log("Broadcasting On Finished");
-        Request_OnFinished.Broadcast(true, this, ERequestResult::Success);    
+        Request_OnFinished.Broadcast(true, this, ERequestResult::Success);
     }
-    
+
     GLog->Log("Request done");
 }

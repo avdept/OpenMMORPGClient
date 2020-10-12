@@ -40,7 +40,7 @@ Saved
 # Compiled Static libraries
 *.lai
 *.la
-*.a
+# *.a
 
 
 # Executables
