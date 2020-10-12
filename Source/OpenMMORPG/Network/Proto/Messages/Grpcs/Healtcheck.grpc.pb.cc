@@ -2,20 +2,6 @@
 // If you make any local change, they will be lost.
 // source: Healtcheck.proto
 
-#define PROTOBUF_INLINE_NOT_IN_HEADERS 0
-
-#pragma warning(disable:4100)
-#pragma warning(disable:4127)
-#pragma warning(disable:4125)
-#pragma warning(disable:4267)
-#pragma warning(disable:4389)
-#pragma warning(disable:4800)
-#pragma warning(disable:4946)
-#pragma warning(disable:4668)
-#pragma warning(disable:4582)
-#pragma warning(disable:4583)
-
-
 #include "Healtcheck.pb.h"
 #include "Healtcheck.grpc.pb.h"
 
@@ -25,9 +11,12 @@
 #include <grpcpp/impl/codegen/channel_interface.h>
 #include <grpcpp/impl/codegen/client_unary_call.h>
 #include <grpcpp/impl/codegen/client_callback.h>
-#include <grpcpp/impl/codegen/method_handler_impl.h>
+#include <grpcpp/impl/codegen/message_allocator.h>
+#include <grpcpp/impl/codegen/method_handler.h>
 #include <grpcpp/impl/codegen/rpc_service_method.h>
 #include <grpcpp/impl/codegen/server_callback.h>
+#include <grpcpp/impl/codegen/server_callback_handlers.h>
+#include <grpcpp/impl/codegen/server_context.h>
 #include <grpcpp/impl/codegen/service_type.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
 namespace utility_messages {
@@ -79,7 +68,12 @@ HealthcheckService::Service::Service() {
       HealthcheckService_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< HealthcheckService::Service, ::utility_messages::HealthCheckParams, ::utility_messages::HealthcheckResult>(
-          std::mem_fn(&HealthcheckService::Service::RunCheck), this)));
+          [](HealthcheckService::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::utility_messages::HealthCheckParams* req,
+             ::utility_messages::HealthcheckResult* resp) {
+               return service->RunCheck(ctx, req, resp);
+             }, this)));
 }
 
 HealthcheckService::Service::~Service() {

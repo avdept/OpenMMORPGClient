@@ -1,2 +1,2 @@
-start protoc.exe -I=Protobufs --cpp_out=. Protobufs/*
+protoc.exe -I=Protobufs --cpp_out=. ./*
 pause

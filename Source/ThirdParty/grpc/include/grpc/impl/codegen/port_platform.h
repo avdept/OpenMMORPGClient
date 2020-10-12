@@ -27,6 +27,18 @@
  *  - some syscalls to be made directly
  */
 
+/*
+ * Defines GPR_ABSEIL_SYNC to use synchronization features from Abseil
+ */
+#ifndef GPR_ABSEIL_SYNC
+#if defined(__APPLE__)
+// This is disabled on Apple platforms because macos/grpc_basictests_c_cpp
+// fails with this. https://github.com/grpc/grpc/issues/23661
+#else
+#define GPR_ABSEIL_SYNC 1
+#endif
+#endif  // GPR_ABSEIL_SYNC
+
 /* Get windows.h included everywhere (we need it) */
 #if defined(_WIN64) || defined(WIN64) || defined(_WIN32) || defined(WIN32)
 #ifndef WIN32_LEAN_AND_MEAN
@@ -39,6 +51,8 @@
 #define NOMINMAX
 #endif /* NOMINMAX */
 
+#include <windows.h>
+
 #ifndef _WIN32_WINNT
 #error \
     "Please compile grpc with _WIN32_WINNT of at least 0x600 (aka Windows Vista)"
@@ -48,8 +62,6 @@
     "Please compile grpc with _WIN32_WINNT of at least 0x600 (aka Windows Vista)"
 #endif /* _WIN32_WINNT < 0x0600 */
 #endif /* defined(_WIN32_WINNT) */
-
-#include <windows.h>
 
 #ifdef GRPC_WIN32_LEAN_AND_MEAN_WAS_NOT_DEFINED
 #undef GRPC_WIN32_LEAN_AND_MEAN_WAS_NOT_DEFINED
@@ -98,31 +110,6 @@
 #define GPR_WINDOWS_ATOMIC 1
 #define GPR_MSVC_TLS 1
 #endif
-#elif defined(GPR_MANYLINUX1)
-// TODO(atash): manylinux1 is just another __linux__ but with ancient
-// libraries; it should be integrated with the `__linux__` definitions below.
-#define GPR_PLATFORM_STRING "manylinux"
-#define GPR_POSIX_CRASH_HANDLER 1
-#define GPR_CPU_POSIX 1
-#define GPR_GCC_ATOMIC 1
-#define GPR_GCC_TLS 1
-#define GPR_LINUX 1
-#define GPR_LINUX_LOG 1
-#define GPR_SUPPORT_CHANNELS_FROM_FD 1
-#define GPR_LINUX_ENV 1
-#define GPR_POSIX_TMPFILE 1
-#define GPR_POSIX_STRING 1
-#define GPR_POSIX_SUBPROCESS 1
-#define GPR_POSIX_SYNC 1
-#define GPR_POSIX_TIME 1
-#define GPR_HAS_PTHREAD_H 1
-#define GPR_GETPID_IN_UNISTD_H 1
-#ifdef _LP64
-#define GPR_ARCH_64 1
-#else /* _LP64 */
-#define GPR_ARCH_32 1
-#endif /* _LP64 */
-#include <linux/version.h>
 #elif defined(ANDROID) || defined(__ANDROID__)
 #define GPR_PLATFORM_STRING "android"
 #define GPR_ANDROID 1
@@ -186,6 +173,26 @@
 #else /* musl libc */
 #define GPR_MUSL_LIBC_COMPAT 1
 #endif
+#elif defined(__ASYLO__)
+#define GPR_ARCH_64 1
+#define GPR_CPU_POSIX 1
+#define GPR_GCC_TLS 1
+#define GPR_PLATFORM_STRING "asylo"
+#define GPR_GCC_SYNC 1
+#define GPR_POSIX_SYNC 1
+#define GPR_POSIX_STRING 1
+#define GPR_POSIX_LOG 1
+#define GPR_POSIX_TIME 1
+#define GPR_POSIX_ENV 1
+#define GPR_ASYLO 1
+#define GRPC_POSIX_SOCKET 1
+#define GRPC_POSIX_SOCKETADDR
+#define GRPC_POSIX_SOCKETUTILS 1
+#define GRPC_TIMER_USE_GENERIC 1
+#define GRPC_POSIX_NO_SPECIAL_WAKEUP_FD 1
+#define GRPC_POSIX_WAKEUP_FD 1
+#define GRPC_ARES 0
+#define GPR_NO_AUTODETECT_PLATFORM 1
 #elif defined(__APPLE__)
 #include <Availability.h>
 #include <TargetConditionals.h>
@@ -197,7 +204,7 @@
 #define GPR_CPU_IPHONE 1
 #define GPR_PTHREAD_TLS 1
 #define GRPC_CFSTREAM 1
-/* the c-ares resolver isnt safe to enable on iOS */
+/* the c-ares resolver isn't safe to enable on iOS */
 #define GRPC_ARES 0
 #else /* TARGET_OS_IPHONE */
 #define GPR_PLATFORM_STRING "osx"
@@ -463,6 +470,23 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif /* _MSC_VER */
 
+/* Type of cycle clock implementation */
+#ifdef GPR_LINUX
+/* Disable cycle clock by default.
+   TODO(soheil): enable when we support fallback for unstable cycle clocks.
+#if defined(__i386__)
+#define GPR_CYCLE_COUNTER_RDTSC_32 1
+#elif defined(__x86_64__) || defined(__amd64__)
+#define GPR_CYCLE_COUNTER_RDTSC_64 1
+#else
+#define GPR_CYCLE_COUNTER_FALLBACK 1
+#endif
+*/
+#define GPR_CYCLE_COUNTER_FALLBACK 1
+#else
+#define GPR_CYCLE_COUNTER_FALLBACK 1
+#endif /* GPR_LINUX */
+
 /* Cache line alignment */
 #ifndef GPR_CACHELINE_SIZE_LOG
 #if defined(__i386__) || defined(__x86_64__)
@@ -615,25 +639,33 @@ typedef unsigned __int64 uint64_t;
 #endif /* GPR_ATTRIBUTE_NO_TSAN (1) */
 
 /* GRPC_TSAN_ENABLED will be defined, when compiled with thread sanitizer. */
+#ifndef GRPC_TSAN_SUPPRESSED
 #if defined(__SANITIZE_THREAD__)
 #define GRPC_TSAN_ENABLED
 #elif GPR_HAS_FEATURE(thread_sanitizer)
 #define GRPC_TSAN_ENABLED
 #endif
+#endif
 
 /* GRPC_ASAN_ENABLED will be defined, when compiled with address sanitizer. */
+#ifndef GRPC_ASAN_SUPPRESSED
 #if defined(__SANITIZE_ADDRESS__)
 #define GRPC_ASAN_ENABLED
 #elif GPR_HAS_FEATURE(address_sanitizer)
 #define GRPC_ASAN_ENABLED
 #endif
+#endif
 
 /* GRPC_ALLOW_EXCEPTIONS should be 0 or 1 if exceptions are allowed or not */
 #ifndef GRPC_ALLOW_EXCEPTIONS
-/* If not already set, set to 1 on Windows (style guide standard) but to
- * 0 on non-Windows platforms unless the compiler defines __EXCEPTIONS */
 #ifdef GPR_WINDOWS
+#if defined(_MSC_VER) && defined(_CPPUNWIND)
 #define GRPC_ALLOW_EXCEPTIONS 1
+#elif defined(__EXCEPTIONS)
+#define GRPC_ALLOW_EXCEPTIONS 1
+#else
+#define GRPC_ALLOW_EXCEPTIONS 0
+#endif
 #else /* GPR_WINDOWS */
 #ifdef __EXCEPTIONS
 #define GRPC_ALLOW_EXCEPTIONS 1

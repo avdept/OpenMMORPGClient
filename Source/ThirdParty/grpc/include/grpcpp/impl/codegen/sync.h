@@ -19,9 +19,6 @@
 #ifndef GRPCPP_IMPL_CODEGEN_SYNC_H
 #define GRPCPP_IMPL_CODEGEN_SYNC_H
 
-#pragma warning(disable:4582)
-#pragma warning(disable:4583)
-
 #include <grpc/impl/codegen/port_platform.h>
 
 #ifdef GPR_HAS_PTHREAD_H
@@ -43,6 +40,9 @@
 // Whenever possible, prefer "src/core/lib/gprpp/sync.h" over this file,
 // since in core we do not rely on g_core_codegen_interface and hence do not
 // pay the costs of virtual function calls.
+
+#pragma warning(disable : 4582)
+#pragma warning(disable : 4583)
 
 namespace grpc {
 namespace internal {

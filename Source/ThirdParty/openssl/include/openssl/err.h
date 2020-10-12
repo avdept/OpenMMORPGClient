@@ -1,452 +1,465 @@
-/*
- * Copyright 1995-2020 The OpenSSL Project Authors. All Rights Reserved.
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+ * All rights reserved.
  *
- * Licensed under the Apache License 2.0 (the "License").  You may not use
- * this file except in compliance with the License.  You can obtain a copy
- * in the file LICENSE in the source distribution or at
- * https://www.openssl.org/source/license.html
+ * This package is an SSL implementation written
+ * by Eric Young (eay@cryptsoft.com).
+ * The implementation was written so as to conform with Netscapes SSL.
+ *
+ * This library is free for commercial and non-commercial use as long as
+ * the following conditions are aheared to.  The following conditions
+ * apply to all code found in this distribution, be it the RC4, RSA,
+ * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
+ * included with this distribution is covered by the same copyright terms
+ * except that the holder is Tim Hudson (tjh@cryptsoft.com).
+ *
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * If this package is used in a product, Eric Young should be given attribution
+ * as the author of the parts of the library used.
+ * This can be in the form of a textual message at program startup or
+ * in documentation (online or textual) provided with the package.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *    "This product includes cryptographic software written by
+ *     Eric Young (eay@cryptsoft.com)"
+ *    The word 'cryptographic' can be left out if the rouines from the library
+ *    being used are not cryptographic related :-).
+ * 4. If you include any Windows specific code (or a derivative thereof) from
+ *    the apps directory (application code) you must include an acknowledgement:
+ *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * The licence and distribution terms for any publically available version or
+ * derivative of this code cannot be changed.  i.e. this code cannot simply be
+ * copied and put under another distribution licence
+ * [including the GNU Public Licence.]
  */
+/* ====================================================================
+ * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"
+ *
+ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
+ *    endorse or promote products derived from this software without
+ *    prior written permission. For written permission, please contact
+ *    openssl-core@openssl.org.
+ *
+ * 5. Products derived from this software may not be called "OpenSSL"
+ *    nor may "OpenSSL" appear in their names without prior written
+ *    permission of the OpenSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This product includes cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product includes software written by Tim
+ * Hudson (tjh@cryptsoft.com). */
 
-#ifndef OPENSSL_ERR_H
-# define OPENSSL_ERR_H
-# pragma once
+#ifndef OPENSSL_HEADER_ERR_H
+#define OPENSSL_HEADER_ERR_H
 
-# include <openssl/macros.h>
-# ifndef OPENSSL_NO_DEPRECATED_3_0
-#  define HEADER_ERR_H
-# endif
+#include <stdio.h>
 
-# include <openssl/e_os2.h>
+#include <openssl/base.h>
 
-# ifndef OPENSSL_NO_STDIO
-#  include <stdio.h>
-#  include <stdlib.h>
-# endif
-
-# include <openssl/types.h>
-# include <openssl/bio.h>
-# include <openssl/lhash.h>
-
-#ifdef  __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
-# ifndef OPENSSL_NO_DEPRECATED_3_0
-#  ifndef OPENSSL_NO_FILENAMES
-#   define ERR_PUT_error(l,f,r,fn,ln)      ERR_put_error(l,f,r,fn,ln)
-#  else
-#   define ERR_PUT_error(l,f,r,fn,ln)      ERR_put_error(l,f,r,NULL,0)
-#  endif
-# endif
 
-# include <limits.h>
-# include <errno.h>
+// Error queue handling functions.
+//
+// Errors in OpenSSL are generally signaled by the return value of a function.
+// When a function fails it may add an entry to a per-thread error queue,
+// which is managed by the functions in this header.
+//
+// Each error contains:
+//   1) The library (i.e. ec, pem, rsa) which created it.
+//   2) The file and line number of the call that added the error.
+//   3) A pointer to some error specific data, which may be NULL.
+//
+// The library identifier and reason code are packed in a uint32_t and there
+// exist various functions for unpacking it.
+//
+// The typical behaviour is that an error will occur deep in a call queue and
+// that code will push an error onto the error queue. As the error queue
+// unwinds, other functions will push their own errors. Thus, the "least
+// recent" error is the most specific and the other errors will provide a
+// backtrace of sorts.
 
-# define ERR_TXT_MALLOCED        0x01
-# define ERR_TXT_STRING          0x02
 
-# if !defined(OPENSSL_NO_DEPRECATED_3_0) || defined(OSSL_FORCE_ERR_STATE)
-#  define ERR_FLAG_MARK           0x01
-#  define ERR_FLAG_CLEAR          0x02
+// Startup and shutdown.
 
-#  define ERR_NUM_ERRORS  16
-struct err_state_st {
-    int err_flags[ERR_NUM_ERRORS];
-    unsigned long err_buffer[ERR_NUM_ERRORS];
-    char *err_data[ERR_NUM_ERRORS];
-    size_t err_data_size[ERR_NUM_ERRORS];
-    int err_data_flags[ERR_NUM_ERRORS];
-    const char *err_file[ERR_NUM_ERRORS];
-    int err_line[ERR_NUM_ERRORS];
-    const char *err_func[ERR_NUM_ERRORS];
-    int top, bottom;
-};
-# endif
+// ERR_load_BIO_strings does nothing.
+//
+// TODO(fork): remove. libjingle calls this.
+OPENSSL_EXPORT void ERR_load_BIO_strings(void);
 
-/* library */
-# define ERR_LIB_NONE            1
-# define ERR_LIB_SYS             2
-# define ERR_LIB_BN              3
-# define ERR_LIB_RSA             4
-# define ERR_LIB_DH              5
-# define ERR_LIB_EVP             6
-# define ERR_LIB_BUF             7
-# define ERR_LIB_OBJ             8
-# define ERR_LIB_PEM             9
-# define ERR_LIB_DSA             10
-# define ERR_LIB_X509            11
-/* #define ERR_LIB_METH         12 */
-# define ERR_LIB_ASN1            13
-# define ERR_LIB_CONF            14
-# define ERR_LIB_CRYPTO          15
-# define ERR_LIB_EC              16
-# define ERR_LIB_SSL             20
-/* #define ERR_LIB_SSL23        21 */
-/* #define ERR_LIB_SSL2         22 */
-/* #define ERR_LIB_SSL3         23 */
-/* #define ERR_LIB_RSAREF       30 */
-/* #define ERR_LIB_PROXY        31 */
-# define ERR_LIB_BIO             32
-# define ERR_LIB_PKCS7           33
-# define ERR_LIB_X509V3          34
-# define ERR_LIB_PKCS12          35
-# define ERR_LIB_RAND            36
-# define ERR_LIB_DSO             37
-# define ERR_LIB_ENGINE          38
-# define ERR_LIB_OCSP            39
-# define ERR_LIB_UI              40
-# define ERR_LIB_COMP            41
-# define ERR_LIB_ECDSA           42
-# define ERR_LIB_ECDH            43
-# define ERR_LIB_OSSL_STORE      44
-# define ERR_LIB_FIPS            45
-# define ERR_LIB_CMS             46
-# define ERR_LIB_TS              47
-# define ERR_LIB_HMAC            48
-/* # define ERR_LIB_JPAKE       49 */
-# define ERR_LIB_CT              50
-# define ERR_LIB_ASYNC           51
-# define ERR_LIB_KDF             52
-# define ERR_LIB_SM2             53
-# define ERR_LIB_ESS             54
-# define ERR_LIB_PROP            55
-# define ERR_LIB_CRMF            56
-# define ERR_LIB_PROV            57
-# define ERR_LIB_CMP             58
-# define ERR_LIB_OSSL_SERIALIZER 59
-# define ERR_LIB_OSSL_DESERIALIZER 60
-# define ERR_LIB_HTTP            61
+// ERR_load_ERR_strings does nothing.
+OPENSSL_EXPORT void ERR_load_ERR_strings(void);
 
-# define ERR_LIB_USER            128
+// ERR_load_crypto_strings does nothing.
+OPENSSL_EXPORT void ERR_load_crypto_strings(void);
 
-# if 1 || !defined(OPENSSL_NO_DEPRECATED_3_0)
-#  define ASN1err(f, r) ERR_raise_data(ERR_LIB_ASN1, (r), NULL)
-#  define ASYNCerr(f, r) ERR_raise_data(ERR_LIB_ASYNC, (r), NULL)
-#  define BIOerr(f, r) ERR_raise_data(ERR_LIB_BIO, (r), NULL)
-#  define BNerr(f, r)  ERR_raise_data(ERR_LIB_BN, (r), NULL)
-#  define BUFerr(f, r) ERR_raise_data(ERR_LIB_BUF, (r), NULL)
-#  define CMPerr(f, r) ERR_raise_data(ERR_LIB_CMP, (r), NULL)
-#  define CMSerr(f, r) ERR_raise_data(ERR_LIB_CMS, (r), NULL)
-#  define COMPerr(f, r) ERR_raise_data(ERR_LIB_COMP, (r), NULL)
-#  define CONFerr(f, r) ERR_raise_data(ERR_LIB_CONF, (r), NULL)
-#  define CRMFerr(f, r) ERR_raise_data(ERR_LIB_CRMF, (r), NULL)
-#  define CRYPTOerr(f, r) ERR_raise_data(ERR_LIB_CRYPTO, (r), NULL)
-#  define CTerr(f, r) ERR_raise_data(ERR_LIB_CT, (r), NULL)
-#  define DHerr(f, r)  ERR_raise_data(ERR_LIB_DH, (r), NULL)
-#  define DSAerr(f, r) ERR_raise_data(ERR_LIB_DSA, (r), NULL)
-#  define DSOerr(f, r) ERR_raise_data(ERR_LIB_DSO, (r), NULL)
-#  define ECDHerr(f, r) ERR_raise_data(ERR_LIB_ECDH, (r), NULL)
-#  define ECDSAerr(f, r) ERR_raise_data(ERR_LIB_ECDSA, (r), NULL)
-#  define ECerr(f, r)  ERR_raise_data(ERR_LIB_EC, (r), NULL)
-#  define ENGINEerr(f, r) ERR_raise_data(ERR_LIB_ENGINE, (r), NULL)
-#  define ESSerr(f, r) ERR_raise_data(ERR_LIB_ESS, (r), NULL)
-#  define EVPerr(f, r) ERR_raise_data(ERR_LIB_EVP, (r), NULL)
-#  define FIPSerr(f, r) ERR_raise_data(ERR_LIB_FIPS, (r), NULL)
-#  define HMACerr(f, r) ERR_raise_data(ERR_LIB_HMAC, (r), NULL)
-#  define HTTPerr(f, r) ERR_raise_data(ERR_LIB_HTTP, (r), NULL)
-#  define KDFerr(f, r) ERR_raise_data(ERR_LIB_KDF, (r), NULL)
-#  define OBJerr(f, r) ERR_raise_data(ERR_LIB_OBJ, (r), NULL)
-#  define OCSPerr(f, r) ERR_raise_data(ERR_LIB_OCSP, (r), NULL)
-#  define OSSL_STOREerr(f, r) ERR_raise_data(ERR_LIB_OSSL_STORE, (r), NULL)
-#  define PEMerr(f, r) ERR_raise_data(ERR_LIB_PEM, (r), NULL)
-#  define PKCS12err(f, r) ERR_raise_data(ERR_LIB_PKCS12, (r), NULL)
-#  define PKCS7err(f, r) ERR_raise_data(ERR_LIB_PKCS7, (r), NULL)
-#  define PROPerr(f, r) ERR_raise_data(ERR_LIB_PROP, (r), NULL)
-#  define PROVerr(f, r) ERR_raise_data(ERR_LIB_PROV, (r), NULL)
-#  define RANDerr(f, r) ERR_raise_data(ERR_LIB_RAND, (r), NULL)
-#  define RSAerr(f, r) ERR_raise_data(ERR_LIB_RSA, (r), NULL)
-#  define KDFerr(f, r) ERR_raise_data(ERR_LIB_KDF, (r), NULL)
-#  define SM2err(f, r) ERR_raise_data(ERR_LIB_SM2, (r), NULL)
-#  define SSLerr(f, r) ERR_raise_data(ERR_LIB_SSL, (r), NULL)
-#  define SYSerr(f, r) ERR_raise_data(ERR_LIB_SYS, (r), NULL)
-#  define TSerr(f, r) ERR_raise_data(ERR_LIB_TS, (r), NULL)
-#  define UIerr(f, r) ERR_raise_data(ERR_LIB_UI, (r), NULL)
-#  define X509V3err(f, r) ERR_raise_data(ERR_LIB_X509V3, (r), NULL)
-#  define X509err(f, r) ERR_raise_data(ERR_LIB_X509, (r), NULL)
-# endif
+// ERR_load_RAND_strings does nothing.
+OPENSSL_EXPORT void ERR_load_RAND_strings(void);
 
-/*-
- * The error code packs differently depending on if it records a system
- * error or an OpenSSL error.
- *
- * A system error packs like this (we follow POSIX and only allow positive
- * numbers that fit in an |int|):
- *
- * +-+-------------------------------------------------------------+
- * |1|                     system error number                     |
- * +-+-------------------------------------------------------------+
- *
- * An OpenSSL error packs like this:
- *
- * <---------------------------- 32 bits -------------------------->
- *    <--- 8 bits ---><------------------ 23 bits ----------------->
- * +-+---------------+---------------------------------------------+
- * |0|    library    |                    reason                   |
- * +-+---------------+---------------------------------------------+
- *
- * A few of the reason bits are reserved as flags with special meaning:
- *
- *                    <4 bits><-------------- 19 bits ------------->
- *                   +-------+-------------------------------------+
- *                   | rflags|                reason               |
- *                   +-------+-------------------------------------+
- *
- * We have the reason flags being part of the overall reason code for
- * backward compatibility reasons, i.e. how ERR_R_FATAL was implemented.
- */
+// ERR_free_strings does nothing.
+OPENSSL_EXPORT void ERR_free_strings(void);
 
-/* Macros to help decode recorded system errors */
-# define ERR_SYSTEM_FLAG                ((unsigned int)INT_MAX + 1)
-# define ERR_SYSTEM_MASK                ((unsigned int)INT_MAX)
 
-/* Macros to help decode recorded OpenSSL errors */
-# define ERR_LIB_OFFSET                 23L
-# define ERR_LIB_MASK                   0xFF
-# define ERR_RFLAGS_OFFSET              19L
-# define ERR_RFLAGS_MASK                0xF
-# define ERR_REASON_MASK                0X7FFFFF
+// Reading and formatting errors.
 
-/*
- * Reason flags are defined pre-shifted to easily combine with the reason
- * number.
- */
-# define ERR_RFLAG_FATAL                (0x1 << ERR_RFLAGS_OFFSET)
+// ERR_GET_LIB returns the library code for the error. This is one of
+// the |ERR_LIB_*| values.
+#define ERR_GET_LIB(packed_error) ((int)(((packed_error) >> 24) & 0xff))
 
-# define ERR_SYSTEM_ERROR(errcode)      (((errcode) & ERR_SYSTEM_FLAG) != 0)
+// ERR_GET_REASON returns the reason code for the error. This is one of
+// library-specific |LIB_R_*| values where |LIB| is the library (see
+// |ERR_GET_LIB|). Note that reason codes are specific to the library.
+#define ERR_GET_REASON(packed_error) ((int)((packed_error) & 0xfff))
 
-static ossl_inline int ERR_GET_LIB(unsigned long errcode)
-{
-    if (ERR_SYSTEM_ERROR(errcode))
-        return ERR_LIB_SYS;
-    return (errcode >> ERR_LIB_OFFSET) & ERR_LIB_MASK;
-}
+// ERR_get_error gets the packed error code for the least recent error and
+// removes that error from the queue. If there are no errors in the queue then
+// it returns zero.
+OPENSSL_EXPORT uint32_t ERR_get_error(void);
 
-static ossl_inline int ERR_GET_FUNC(unsigned long errcode)
-{
-    return 0;
-}
+// ERR_get_error_line acts like |ERR_get_error|, except that the file and line
+// number of the call that added the error are also returned.
+OPENSSL_EXPORT uint32_t ERR_get_error_line(const char **file, int *line);
 
-static ossl_inline int ERR_GET_RFLAGS(unsigned long errcode)
-{
-    if (ERR_SYSTEM_ERROR(errcode))
-        return 0;
-    return errcode & (ERR_RFLAGS_MASK << ERR_RFLAGS_OFFSET);
-}
+// ERR_FLAG_STRING means that the |data| member is a NUL-terminated string that
+// can be printed. This is always set if |data| is non-NULL.
+#define ERR_FLAG_STRING 1
 
-static ossl_inline int ERR_GET_REASON(unsigned long errcode)
-{
-    if (ERR_SYSTEM_ERROR(errcode))
-        return errcode & ERR_SYSTEM_MASK;
-    return errcode & ERR_REASON_MASK;
-}
+// ERR_get_error_line_data acts like |ERR_get_error_line|, but also returns the
+// error-specific data pointer and flags. The flags are a bitwise-OR of
+// |ERR_FLAG_*| values. The error-specific data is owned by the error queue
+// and the pointer becomes invalid after the next call that affects the same
+// thread's error queue. If |*flags| contains |ERR_FLAG_STRING| then |*data| is
+// human-readable.
+OPENSSL_EXPORT uint32_t ERR_get_error_line_data(const char **file, int *line,
+                                                const char **data, int *flags);
 
-static ossl_inline int ERR_FATAL_ERROR(unsigned long errcode)
-{
-    return (ERR_GET_RFLAGS(errcode) & ERR_RFLAG_FATAL) != 0;
-}
+// The "peek" functions act like the |ERR_get_error| functions, above, but they
+// do not remove the error from the queue.
+OPENSSL_EXPORT uint32_t ERR_peek_error(void);
+OPENSSL_EXPORT uint32_t ERR_peek_error_line(const char **file, int *line);
+OPENSSL_EXPORT uint32_t ERR_peek_error_line_data(const char **file, int *line,
+                                                 const char **data, int *flags);
 
-/*
- * ERR_PACK is a helper macro to properly pack OpenSSL error codes and may
- * only be used for that purpose.  System errors are packed internally.
- * ERR_PACK takes reason flags and reason code combined in |reason|.
- * ERR_PACK ignores |func|, that parameter is just legacy from pre-3.0 OpenSSL.
- */
-# define ERR_PACK(lib,func,reason)                                      \
-    ( (((unsigned long)(lib)    & ERR_LIB_MASK   ) << ERR_LIB_OFFSET) | \
-      (((unsigned long)(reason) & ERR_REASON_MASK)) )
-
-# ifndef OPENSSL_NO_DEPRECATED_3_0
-#  define SYS_F_FOPEN             0
-#  define SYS_F_CONNECT           0
-#  define SYS_F_GETSERVBYNAME     0
-#  define SYS_F_SOCKET            0
-#  define SYS_F_IOCTLSOCKET       0
-#  define SYS_F_BIND              0
-#  define SYS_F_LISTEN            0
-#  define SYS_F_ACCEPT            0
-#  define SYS_F_WSASTARTUP        0
-#  define SYS_F_OPENDIR           0
-#  define SYS_F_FREAD             0
-#  define SYS_F_GETADDRINFO       0
-#  define SYS_F_GETNAMEINFO       0
-#  define SYS_F_SETSOCKOPT        0
-#  define SYS_F_GETSOCKOPT        0
-#  define SYS_F_GETSOCKNAME       0
-#  define SYS_F_GETHOSTBYNAME     0
-#  define SYS_F_FFLUSH            0
-#  define SYS_F_OPEN              0
-#  define SYS_F_CLOSE             0
-#  define SYS_F_IOCTL             0
-#  define SYS_F_STAT              0
-#  define SYS_F_FCNTL             0
-#  define SYS_F_FSTAT             0
-#  define SYS_F_SENDFILE          0
-# endif
-
-/* "we came from here" global reason codes, range 1..63 */
-# define ERR_R_SYS_LIB   ERR_LIB_SYS/* 2 */
-# define ERR_R_BN_LIB    ERR_LIB_BN/* 3 */
-# define ERR_R_RSA_LIB   ERR_LIB_RSA/* 4 */
-# define ERR_R_DH_LIB    ERR_LIB_DH/* 5 */
-# define ERR_R_EVP_LIB   ERR_LIB_EVP/* 6 */
-# define ERR_R_BUF_LIB   ERR_LIB_BUF/* 7 */
-# define ERR_R_OBJ_LIB   ERR_LIB_OBJ/* 8 */
-# define ERR_R_PEM_LIB   ERR_LIB_PEM/* 9 */
-# define ERR_R_DSA_LIB   ERR_LIB_DSA/* 10 */
-# define ERR_R_X509_LIB  ERR_LIB_X509/* 11 */
-# define ERR_R_ASN1_LIB  ERR_LIB_ASN1/* 13 */
-# define ERR_R_EC_LIB    ERR_LIB_EC/* 16 */
-# define ERR_R_BIO_LIB   ERR_LIB_BIO/* 32 */
-# define ERR_R_PKCS7_LIB ERR_LIB_PKCS7/* 33 */
-# define ERR_R_X509V3_LIB ERR_LIB_X509V3/* 34 */
-# define ERR_R_ENGINE_LIB ERR_LIB_ENGINE/* 38 */
-# define ERR_R_UI_LIB    ERR_LIB_UI/* 40 */
-# define ERR_R_ECDSA_LIB ERR_LIB_ECDSA/* 42 */
-# define ERR_R_OSSL_STORE_LIB ERR_LIB_OSSL_STORE/* 44 */
-
-/*
- * global reason codes, range 64..99 (sub-system specific codes start at 100)
- *
- * ERR_R_FATAL had dual purposes in pre-3.0 OpenSSL, as a standalone reason
- * code as well as a fatal flag.  This is still possible to do, as 2**6 (64)
- * is present in the whole range of global reason codes.
- */
-# define ERR_R_FATAL                             (64|ERR_RFLAG_FATAL)
-# define ERR_R_MALLOC_FAILURE                    (65|ERR_RFLAG_FATAL)
-# define ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED       (66|ERR_RFLAG_FATAL)
-# define ERR_R_PASSED_NULL_PARAMETER             (67|ERR_RFLAG_FATAL)
-# define ERR_R_INTERNAL_ERROR                    (68|ERR_RFLAG_FATAL)
-# define ERR_R_DISABLED                          (69|ERR_RFLAG_FATAL)
-# define ERR_R_INIT_FAIL                         (70|ERR_RFLAG_FATAL)
-# define ERR_R_PASSED_INVALID_ARGUMENT           (71)
-# define ERR_R_OPERATION_FAIL                    (72|ERR_RFLAG_FATAL)
-# define ERR_R_INVALID_PROVIDER_FUNCTIONS        (73|ERR_RFLAG_FATAL)
-# define ERR_R_INTERRUPTED_OR_CANCELLED          (74)
-# define ERR_R_NESTED_ASN1_ERROR                 (76)
-# define ERR_R_MISSING_ASN1_EOS                  (77)
-
-/*
- * 99 is the maximum possible ERR_R_... code, higher values are reserved for
- * the individual libraries
- */
-
-typedef struct ERR_string_data_st {
-    unsigned long error;
-    const char *string;
-} ERR_STRING_DATA;
-
-DEFINE_LHASH_OF(ERR_STRING_DATA);
-
-/* 12 lines and some on an 80 column terminal */
-#define ERR_MAX_DATA_SIZE       1024
-
-/* Building blocks */
-void ERR_new(void);
-void ERR_set_debug(const char *file, int line, const char *func);
-void ERR_set_error(int lib, int reason, const char *fmt, ...);
-void ERR_vset_error(int lib, int reason, const char *fmt, va_list args);
-
-/* Main error raising functions */
-# define ERR_raise(lib, reason) ERR_raise_data((lib),(reason),NULL)
-# define ERR_raise_data                                         \
-    (ERR_new(),                                                 \
-     ERR_set_debug(OPENSSL_FILE,OPENSSL_LINE,OPENSSL_FUNC),     \
-     ERR_set_error)
-
-# ifndef OPENSSL_NO_DEPRECATED_3_0
-/* Backward compatibility */
-#  define ERR_put_error(lib, func, reason, file, line)          \
-    (ERR_new(),                                                 \
-     ERR_set_debug((file), (line), OPENSSL_FUNC),               \
-     ERR_set_error((lib), (reason), NULL))
-# endif
-
-void ERR_set_error_data(char *data, int flags);
-
-unsigned long ERR_get_error(void);
-/*
- * TODO(3.0) consider if the following three functions should be deprecated.
- * They all drop the error record from the error queue, so regardless of which
- * one is used, the rest of the information is lost, making them not so useful.
- * The recommendation should be to use the peek functions to extract all the
- * additional data.
- */
-unsigned long ERR_get_error_line(const char **file, int *line);
-unsigned long ERR_get_error_func(const char **func);
-unsigned long ERR_get_error_data(const char **data, int *flags);
-unsigned long ERR_get_error_all(const char **file, int *line,
-                                const char **func,
-                                const char **data, int *flags);
-DEPRECATEDIN_3_0(unsigned long ERR_get_error_line_data(const char **file,
-                                                     int *line,
-                                                     const char **data,
-                                                     int *flags))
-unsigned long ERR_peek_error(void);
-unsigned long ERR_peek_error_line(const char **file, int *line);
-unsigned long ERR_peek_error_func(const char **func);
-unsigned long ERR_peek_error_data(const char **data, int *flags);
-unsigned long ERR_peek_error_all(const char **file, int *line,
-                                 const char **func,
-                                 const char **data, int *flags);
-DEPRECATEDIN_3_0(unsigned long ERR_peek_error_line_data(const char **file,
+// The "peek last" functions act like the "peek" functions, above, except that
+// they return the most recent error.
+OPENSSL_EXPORT uint32_t ERR_peek_last_error(void);
+OPENSSL_EXPORT uint32_t ERR_peek_last_error_line(const char **file, int *line);
+OPENSSL_EXPORT uint32_t ERR_peek_last_error_line_data(const char **file,
                                                       int *line,
                                                       const char **data,
-                                                      int *flags))
-unsigned long ERR_peek_last_error(void);
-unsigned long ERR_peek_last_error_line(const char **file, int *line);
-unsigned long ERR_peek_last_error_func(const char **func);
-unsigned long ERR_peek_last_error_data(const char **data, int *flags);
-unsigned long ERR_peek_last_error_all(const char **file, int *line,
-                                      const char **func,
-                                      const char **data, int *flags);
-DEPRECATEDIN_3_0(unsigned long ERR_peek_last_error_line_data(const char **file,
-                                                           int *line,
-                                                           const char **data,
-                                                           int *flags))
+                                                      int *flags);
 
-void ERR_clear_error(void);
+// ERR_error_string_n generates a human-readable string representing
+// |packed_error|, places it at |buf|, and returns |buf|. It writes at most
+// |len| bytes (including the terminating NUL) and truncates the string if
+// necessary. If |len| is greater than zero then |buf| is always NUL terminated.
+//
+// The string will have the following format:
+//
+//   error:[error code]:[library name]:OPENSSL_internal:[reason string]
+//
+// error code is an 8 digit hexadecimal number; library name and reason string
+// are ASCII text.
+OPENSSL_EXPORT char *ERR_error_string_n(uint32_t packed_error, char *buf,
+                                        size_t len);
 
-char *ERR_error_string(unsigned long e, char *buf);
-void ERR_error_string_n(unsigned long e, char *buf, size_t len);
-const char *ERR_lib_error_string(unsigned long e);
-DEPRECATEDIN_3_0(const char *ERR_func_error_string(unsigned long e))
-const char *ERR_reason_error_string(unsigned long e);
+// ERR_lib_error_string returns a string representation of the library that
+// generated |packed_error|.
+OPENSSL_EXPORT const char *ERR_lib_error_string(uint32_t packed_error);
 
-void ERR_print_errors_cb(int (*cb) (const char *str, size_t len, void *u),
-                         void *u);
-# ifndef OPENSSL_NO_STDIO
-void ERR_print_errors_fp(FILE *fp);
-# endif
-void ERR_print_errors(BIO *bp);
+// ERR_reason_error_string returns a string representation of the reason for
+// |packed_error|.
+OPENSSL_EXPORT const char *ERR_reason_error_string(uint32_t packed_error);
 
-void ERR_add_error_data(int num, ...);
-void ERR_add_error_vdata(int num, va_list args);
-void ERR_add_error_txt(const char *sepr, const char *txt);
-void ERR_add_error_mem_bio(const char *sep, BIO *bio);
+// ERR_print_errors_callback_t is the type of a function used by
+// |ERR_print_errors_cb|. It takes a pointer to a human readable string (and
+// its length) that describes an entry in the error queue. The |ctx| argument
+// is an opaque pointer given to |ERR_print_errors_cb|.
+//
+// It should return one on success or zero on error, which will stop the
+// iteration over the error queue.
+typedef int (*ERR_print_errors_callback_t)(const char *str, size_t len,
+                                           void *ctx);
 
-int ERR_load_strings(int lib, ERR_STRING_DATA *str);
-int ERR_load_strings_const(const ERR_STRING_DATA *str);
-int ERR_unload_strings(int lib, ERR_STRING_DATA *str);
-int ERR_load_ERR_strings(void);
+// ERR_print_errors_cb clears the current thread's error queue, calling
+// |callback| with a string representation of each error, from the least recent
+// to the most recent error.
+//
+// The string will have the following format (which differs from
+// |ERR_error_string|):
+//
+//   [thread id]:error:[error code]:[library name]:OPENSSL_internal:[reason string]:[file]:[line number]:[optional string data]
+//
+// The callback can return one to continue the iteration or zero to stop it.
+// The |ctx| argument is an opaque value that is passed through to the
+// callback.
+OPENSSL_EXPORT void ERR_print_errors_cb(ERR_print_errors_callback_t callback,
+                                        void *ctx);
 
-#ifndef OPENSSL_NO_DEPRECATED_1_1_0
-# define ERR_load_crypto_strings() \
-    OPENSSL_init_crypto(OPENSSL_INIT_LOAD_CRYPTO_STRINGS, NULL)
-# define ERR_free_strings() while(0) continue
+// ERR_print_errors_fp clears the current thread's error queue, printing each
+// error to |file|. See |ERR_print_errors_cb| for the format.
+OPENSSL_EXPORT void ERR_print_errors_fp(FILE *file);
+
+
+// Clearing errors.
+
+// ERR_clear_error clears the error queue for the current thread.
+OPENSSL_EXPORT void ERR_clear_error(void);
+
+// ERR_set_mark "marks" the most recent error for use with |ERR_pop_to_mark|.
+// It returns one if an error was marked and zero if there are no errors.
+OPENSSL_EXPORT int ERR_set_mark(void);
+
+// ERR_pop_to_mark removes errors from the most recent to the least recent
+// until (and not including) a "marked" error. It returns zero if no marked
+// error was found (and thus all errors were removed) and one otherwise. Errors
+// are marked using |ERR_set_mark|.
+OPENSSL_EXPORT int ERR_pop_to_mark(void);
+
+
+// Custom errors.
+
+// ERR_get_next_error_library returns a value suitable for passing as the
+// |library| argument to |ERR_put_error|. This is intended for code that wishes
+// to push its own, non-standard errors to the error queue.
+OPENSSL_EXPORT int ERR_get_next_error_library(void);
+
+
+// Built-in library and reason codes.
+
+// The following values are built-in library codes.
+enum {
+  ERR_LIB_NONE = 1,
+  ERR_LIB_SYS,
+  ERR_LIB_BN,
+  ERR_LIB_RSA,
+  ERR_LIB_DH,
+  ERR_LIB_EVP,
+  ERR_LIB_BUF,
+  ERR_LIB_OBJ,
+  ERR_LIB_PEM,
+  ERR_LIB_DSA,
+  ERR_LIB_X509,
+  ERR_LIB_ASN1,
+  ERR_LIB_CONF,
+  ERR_LIB_CRYPTO,
+  ERR_LIB_EC,
+  ERR_LIB_SSL,
+  ERR_LIB_BIO,
+  ERR_LIB_PKCS7,
+  ERR_LIB_PKCS8,
+  ERR_LIB_X509V3,
+  ERR_LIB_RAND,
+  ERR_LIB_ENGINE,
+  ERR_LIB_OCSP,
+  ERR_LIB_UI,
+  ERR_LIB_COMP,
+  ERR_LIB_ECDSA,
+  ERR_LIB_ECDH,
+  ERR_LIB_HMAC,
+  ERR_LIB_DIGEST,
+  ERR_LIB_CIPHER,
+  ERR_LIB_HKDF,
+  ERR_LIB_TRUST_TOKEN,
+  ERR_LIB_USER,
+  ERR_NUM_LIBS
+};
+
+// The following reason codes used to denote an error occuring in another
+// library. They are sometimes used for a stack trace.
+#define ERR_R_SYS_LIB ERR_LIB_SYS
+#define ERR_R_BN_LIB ERR_LIB_BN
+#define ERR_R_RSA_LIB ERR_LIB_RSA
+#define ERR_R_DH_LIB ERR_LIB_DH
+#define ERR_R_EVP_LIB ERR_LIB_EVP
+#define ERR_R_BUF_LIB ERR_LIB_BUF
+#define ERR_R_OBJ_LIB ERR_LIB_OBJ
+#define ERR_R_PEM_LIB ERR_LIB_PEM
+#define ERR_R_DSA_LIB ERR_LIB_DSA
+#define ERR_R_X509_LIB ERR_LIB_X509
+#define ERR_R_ASN1_LIB ERR_LIB_ASN1
+#define ERR_R_CONF_LIB ERR_LIB_CONF
+#define ERR_R_CRYPTO_LIB ERR_LIB_CRYPTO
+#define ERR_R_EC_LIB ERR_LIB_EC
+#define ERR_R_SSL_LIB ERR_LIB_SSL
+#define ERR_R_BIO_LIB ERR_LIB_BIO
+#define ERR_R_PKCS7_LIB ERR_LIB_PKCS7
+#define ERR_R_PKCS8_LIB ERR_LIB_PKCS8
+#define ERR_R_X509V3_LIB ERR_LIB_X509V3
+#define ERR_R_RAND_LIB ERR_LIB_RAND
+#define ERR_R_DSO_LIB ERR_LIB_DSO
+#define ERR_R_ENGINE_LIB ERR_LIB_ENGINE
+#define ERR_R_OCSP_LIB ERR_LIB_OCSP
+#define ERR_R_UI_LIB ERR_LIB_UI
+#define ERR_R_COMP_LIB ERR_LIB_COMP
+#define ERR_R_ECDSA_LIB ERR_LIB_ECDSA
+#define ERR_R_ECDH_LIB ERR_LIB_ECDH
+#define ERR_R_STORE_LIB ERR_LIB_STORE
+#define ERR_R_FIPS_LIB ERR_LIB_FIPS
+#define ERR_R_CMS_LIB ERR_LIB_CMS
+#define ERR_R_TS_LIB ERR_LIB_TS
+#define ERR_R_HMAC_LIB ERR_LIB_HMAC
+#define ERR_R_JPAKE_LIB ERR_LIB_JPAKE
+#define ERR_R_USER_LIB ERR_LIB_USER
+#define ERR_R_DIGEST_LIB ERR_LIB_DIGEST
+#define ERR_R_CIPHER_LIB ERR_LIB_CIPHER
+#define ERR_R_HKDF_LIB ERR_LIB_HKDF
+#define ERR_R_TRUST_TOKEN_LIB ERR_LIB_TRUST_TOKEN
+
+// The following values are global reason codes. They may occur in any library.
+#define ERR_R_FATAL 64
+#define ERR_R_MALLOC_FAILURE (1 | ERR_R_FATAL)
+#define ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED (2 | ERR_R_FATAL)
+#define ERR_R_PASSED_NULL_PARAMETER (3 | ERR_R_FATAL)
+#define ERR_R_INTERNAL_ERROR (4 | ERR_R_FATAL)
+#define ERR_R_OVERFLOW (5 | ERR_R_FATAL)
+
+
+// Deprecated functions.
+
+// ERR_remove_state calls |ERR_clear_error|.
+OPENSSL_EXPORT void ERR_remove_state(unsigned long pid);
+
+// ERR_remove_thread_state clears the error queue for the current thread if
+// |tid| is NULL. Otherwise it calls |assert(0)|, because it's no longer
+// possible to delete the error queue for other threads.
+//
+// Use |ERR_clear_error| instead. Note error queues are deleted automatically on
+// thread exit. You do not need to call this function to release memory.
+OPENSSL_EXPORT void ERR_remove_thread_state(const CRYPTO_THREADID *tid);
+
+// ERR_func_error_string returns the string "OPENSSL_internal".
+OPENSSL_EXPORT const char *ERR_func_error_string(uint32_t packed_error);
+
+// ERR_error_string behaves like |ERR_error_string_n| but |len| is implicitly
+// |ERR_ERROR_STRING_BUF_LEN|.
+//
+// Additionally, if |buf| is NULL, the error string is placed in a static buffer
+// which is returned. This is not thread-safe and only exists for backwards
+// compatibility with legacy callers. The static buffer will be overridden by
+// calls in other threads.
+//
+// Use |ERR_error_string_n| instead.
+//
+// TODO(fork): remove this function.
+OPENSSL_EXPORT char *ERR_error_string(uint32_t packed_error, char *buf);
+#define ERR_ERROR_STRING_BUF_LEN 120
+
+// ERR_GET_FUNC returns zero. BoringSSL errors do not report a function code.
+#define ERR_GET_FUNC(packed_error) 0
+
+// ERR_TXT_STRING is provided for compatibility with code that assumes that
+// it's using OpenSSL.
+#define ERR_TXT_STRING ERR_FLAG_STRING
+
+
+// Private functions.
+
+// ERR_clear_system_error clears the system's error value (i.e. errno).
+OPENSSL_EXPORT void ERR_clear_system_error(void);
+
+// OPENSSL_PUT_ERROR is used by OpenSSL code to add an error to the error
+// queue.
+#define OPENSSL_PUT_ERROR(library, reason) \
+  ERR_put_error(ERR_LIB_##library, 0, reason, __FILE__, __LINE__)
+
+// OPENSSL_PUT_SYSTEM_ERROR is used by OpenSSL code to add an error from the
+// operating system to the error queue.
+// TODO(fork): include errno.
+#define OPENSSL_PUT_SYSTEM_ERROR() \
+  ERR_put_error(ERR_LIB_SYS, 0, 0, __FILE__, __LINE__);
+
+// ERR_put_error adds an error to the error queue, dropping the least recent
+// error if necessary for space reasons.
+OPENSSL_EXPORT void ERR_put_error(int library, int unused, int reason,
+                                  const char *file, unsigned line);
+
+// ERR_add_error_data takes a variable number (|count|) of const char*
+// pointers, concatenates them and sets the result as the data on the most
+// recent error.
+OPENSSL_EXPORT void ERR_add_error_data(unsigned count, ...);
+
+// ERR_add_error_dataf takes a printf-style format and arguments, and sets the
+// result as the data on the most recent error.
+OPENSSL_EXPORT void ERR_add_error_dataf(const char *format, ...)
+    OPENSSL_PRINTF_FORMAT_FUNC(1, 2);
+
+// ERR_NUM_ERRORS is one more than the limit of the number of errors in the
+// queue.
+#define ERR_NUM_ERRORS 16
+
+#define ERR_PACK(lib, reason)                                              \
+  (((((uint32_t)(lib)) & 0xff) << 24) | ((((uint32_t)(reason)) & 0xfff)))
+
+// OPENSSL_DECLARE_ERROR_REASON is used by util/make_errors.h (which generates
+// the error defines) to recognise that an additional reason value is needed.
+// This is needed when the reason value is used outside of an
+// |OPENSSL_PUT_ERROR| macro. The resulting define will be
+// ${lib}_R_${reason}.
+#define OPENSSL_DECLARE_ERROR_REASON(lib, reason)
+
+
+#if defined(__cplusplus)
+}  // extern C
 #endif
 
-DEPRECATEDIN_1_1_0(void ERR_remove_thread_state(void *))
-DEPRECATEDIN_1_0_0(void ERR_remove_state(unsigned long pid))
-DEPRECATEDIN_3_0(ERR_STATE *ERR_get_state(void))
-
-int ERR_get_next_error_library(void);
-
-int ERR_set_mark(void);
-int ERR_pop_to_mark(void);
-int ERR_clear_last_mark(void);
-
-#ifdef  __cplusplus
-}
-#endif
-
-#endif
+#endif  // OPENSSL_HEADER_ERR_H

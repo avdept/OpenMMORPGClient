@@ -50,7 +50,7 @@ class ClientAsyncStreamingInterface {
   /// when the call has been ended.
   /// Should not be used concurrently with other operations.
   ///
-  /// It is appropriate to call this method when both:
+  /// It is appropriate to call this method exactly once when both:
   ///   * the client side has no more message to send
   ///     (this can be declared implicitly by calling this method, or
   ///     explicitly through an earlier call to the <i>WritesDone</i> method
@@ -178,9 +178,9 @@ class ClientAsyncReaderFactory {
   /// used to send to the server when starting the call.
   template <class W>
   static ClientAsyncReader<R>* Create(::grpc::ChannelInterface* channel,
-                                      ::grpc_impl::CompletionQueue* cq,
+                                      ::grpc::CompletionQueue* cq,
                                       const ::grpc::internal::RpcMethod& method,
-                                      ::grpc_impl::ClientContext* context,
+                                      ::grpc::ClientContext* context,
                                       const W& request, bool start, void* tag) {
     ::grpc::internal::Call call = channel->CreateCall(method, context, cq);
     return new (::grpc::g_core_codegen_interface->grpc_call_arena_alloc(
@@ -197,8 +197,8 @@ template <class R>
 class ClientAsyncReader final : public ClientAsyncReaderInterface<R> {
  public:
   // always allocated against a call arena, no memory free required
-  static void operator delete(void* ptr, std::size_t size) {
-    assert(size == sizeof(ClientAsyncReader));
+  static void operator delete(void* /*ptr*/, std::size_t size) {
+    GPR_CODEGEN_ASSERT(size == sizeof(ClientAsyncReader));
   }
 
   // This operator should never be called as the memory should be freed as part
@@ -206,10 +206,10 @@ class ClientAsyncReader final : public ClientAsyncReaderInterface<R> {
   // delete to the operator new so that some compilers will not complain (see
   // https://github.com/grpc/grpc/issues/11301) Note at the time of adding this
   // there are no tests catching the compiler warning.
-  static void operator delete(void*, void*) { assert(0); }
+  static void operator delete(void*, void*) { GPR_CODEGEN_ASSERT(false); }
 
   void StartCall(void* tag) override {
-    assert(!started_);
+    GPR_CODEGEN_ASSERT(!started_);
     started_ = true;
     StartCallInternal(tag);
   }
@@ -223,7 +223,7 @@ class ClientAsyncReader final : public ClientAsyncReaderInterface<R> {
   ///     calling code can access the received metadata through the
   ///     \a ClientContext.
   void ReadInitialMetadata(void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     GPR_CODEGEN_ASSERT(!context_->initial_metadata_received_);
 
     meta_ops_.set_output_tag(tag);
@@ -232,7 +232,7 @@ class ClientAsyncReader final : public ClientAsyncReaderInterface<R> {
   }
 
   void Read(R* msg, void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     read_ops_.set_output_tag(tag);
     if (!context_->initial_metadata_received_) {
       read_ops_.RecvInitialMetadata(context_);
@@ -247,7 +247,7 @@ class ClientAsyncReader final : public ClientAsyncReaderInterface<R> {
   ///   - the \a ClientContext associated with this call is updated with
   ///     possible initial and trailing metadata received from the server.
   void Finish(::grpc::Status* status, void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     finish_ops_.set_output_tag(tag);
     if (!context_->initial_metadata_received_) {
       finish_ops_.RecvInitialMetadata(context_);
@@ -259,9 +259,8 @@ class ClientAsyncReader final : public ClientAsyncReaderInterface<R> {
  private:
   friend class internal::ClientAsyncReaderFactory<R>;
   template <class W>
-  ClientAsyncReader(::grpc::internal::Call call,
-                    ::grpc_impl::ClientContext* context, const W& request,
-                    bool start, void* tag)
+  ClientAsyncReader(::grpc::internal::Call call, ::grpc::ClientContext* context,
+                    const W& request, bool start, void* tag)
       : context_(context), call_(call), started_(start) {
     // TODO(ctiller): don't assert
     GPR_CODEGEN_ASSERT(init_ops_.SendMessage(request).ok());
@@ -269,7 +268,7 @@ class ClientAsyncReader final : public ClientAsyncReaderInterface<R> {
     if (start) {
       StartCallInternal(tag);
     } else {
-      assert(tag == nullptr);
+      GPR_CODEGEN_ASSERT(tag == nullptr);
     }
   }
 
@@ -280,7 +279,7 @@ class ClientAsyncReader final : public ClientAsyncReaderInterface<R> {
     call_.PerformOps(&init_ops_);
   }
 
-  ::grpc_impl::ClientContext* context_;
+  ::grpc::ClientContext* context_;
   ::grpc::internal::Call call_;
   bool started_;
   ::grpc::internal::CallOpSet<::grpc::internal::CallOpSendInitialMetadata,
@@ -327,9 +326,9 @@ class ClientAsyncWriterFactory {
   /// method of this instance.
   template <class R>
   static ClientAsyncWriter<W>* Create(::grpc::ChannelInterface* channel,
-                                      ::grpc_impl::CompletionQueue* cq,
+                                      ::grpc::CompletionQueue* cq,
                                       const ::grpc::internal::RpcMethod& method,
-                                      ::grpc_impl::ClientContext* context,
+                                      ::grpc::ClientContext* context,
                                       R* response, bool start, void* tag) {
     ::grpc::internal::Call call = channel->CreateCall(method, context, cq);
     return new (::grpc::g_core_codegen_interface->grpc_call_arena_alloc(
@@ -346,8 +345,8 @@ template <class W>
 class ClientAsyncWriter final : public ClientAsyncWriterInterface<W> {
  public:
   // always allocated against a call arena, no memory free required
-  static void operator delete(void* ptr, std::size_t size) {
-    assert(size == sizeof(ClientAsyncWriter));
+  static void operator delete(void* /*ptr*/, std::size_t size) {
+    GPR_CODEGEN_ASSERT(size == sizeof(ClientAsyncWriter));
   }
 
   // This operator should never be called as the memory should be freed as part
@@ -355,10 +354,10 @@ class ClientAsyncWriter final : public ClientAsyncWriterInterface<W> {
   // delete to the operator new so that some compilers will not complain (see
   // https://github.com/grpc/grpc/issues/11301) Note at the time of adding this
   // there are no tests catching the compiler warning.
-  static void operator delete(void*, void*) { assert(0); }
+  static void operator delete(void*, void*) { GPR_CODEGEN_ASSERT(false); }
 
   void StartCall(void* tag) override {
-    assert(!started_);
+    GPR_CODEGEN_ASSERT(!started_);
     started_ = true;
     StartCallInternal(tag);
   }
@@ -371,7 +370,7 @@ class ClientAsyncWriter final : public ClientAsyncWriterInterface<W> {
   ///     associated with this call is updated, and the calling code can access
   ///     the received metadata through the \a ClientContext.
   void ReadInitialMetadata(void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     GPR_CODEGEN_ASSERT(!context_->initial_metadata_received_);
 
     meta_ops_.set_output_tag(tag);
@@ -380,7 +379,7 @@ class ClientAsyncWriter final : public ClientAsyncWriterInterface<W> {
   }
 
   void Write(const W& msg, void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     write_ops_.set_output_tag(tag);
     // TODO(ctiller): don't assert
     GPR_CODEGEN_ASSERT(write_ops_.SendMessage(msg).ok());
@@ -388,7 +387,7 @@ class ClientAsyncWriter final : public ClientAsyncWriterInterface<W> {
   }
 
   void Write(const W& msg, ::grpc::WriteOptions options, void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     write_ops_.set_output_tag(tag);
     if (options.is_last_message()) {
       options.set_buffer_hint();
@@ -400,7 +399,7 @@ class ClientAsyncWriter final : public ClientAsyncWriterInterface<W> {
   }
 
   void WritesDone(void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     write_ops_.set_output_tag(tag);
     write_ops_.ClientSendClose();
     call_.PerformOps(&write_ops_);
@@ -414,7 +413,7 @@ class ClientAsyncWriter final : public ClientAsyncWriterInterface<W> {
   ///   - attempts to fill in the \a response parameter passed to this class's
   ///     constructor with the server's response message.
   void Finish(::grpc::Status* status, void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     finish_ops_.set_output_tag(tag);
     if (!context_->initial_metadata_received_) {
       finish_ops_.RecvInitialMetadata(context_);
@@ -426,16 +425,15 @@ class ClientAsyncWriter final : public ClientAsyncWriterInterface<W> {
  private:
   friend class internal::ClientAsyncWriterFactory<W>;
   template <class R>
-  ClientAsyncWriter(::grpc::internal::Call call,
-                    ::grpc_impl::ClientContext* context, R* response,
-                    bool start, void* tag)
+  ClientAsyncWriter(::grpc::internal::Call call, ::grpc::ClientContext* context,
+                    R* response, bool start, void* tag)
       : context_(context), call_(call), started_(start) {
     finish_ops_.RecvMessage(response);
     finish_ops_.AllowNoMessage();
     if (start) {
       StartCallInternal(tag);
     } else {
-      assert(tag == nullptr);
+      GPR_CODEGEN_ASSERT(tag == nullptr);
     }
   }
 
@@ -450,7 +448,7 @@ class ClientAsyncWriter final : public ClientAsyncWriterInterface<W> {
     }
   }
 
-  ::grpc_impl::ClientContext* context_;
+  ::grpc::ClientContext* context_;
   ::grpc::internal::Call call_;
   bool started_;
   ::grpc::internal::CallOpSet<::grpc::internal::CallOpRecvInitialMetadata>
@@ -493,9 +491,9 @@ class ClientAsyncReaderWriterFactory {
   /// Note that \a context will be used to fill in custom initial metadata
   /// used to send to the server when starting the call.
   static ClientAsyncReaderWriter<W, R>* Create(
-      ::grpc::ChannelInterface* channel, ::grpc_impl::CompletionQueue* cq,
-      const ::grpc::internal::RpcMethod& method,
-      ::grpc_impl::ClientContext* context, bool start, void* tag) {
+      ::grpc::ChannelInterface* channel, ::grpc::CompletionQueue* cq,
+      const ::grpc::internal::RpcMethod& method, ::grpc::ClientContext* context,
+      bool start, void* tag) {
     ::grpc::internal::Call call = channel->CreateCall(method, context, cq);
 
     return new (::grpc::g_core_codegen_interface->grpc_call_arena_alloc(
@@ -514,8 +512,8 @@ class ClientAsyncReaderWriter final
     : public ClientAsyncReaderWriterInterface<W, R> {
  public:
   // always allocated against a call arena, no memory free required
-  static void operator delete(void* ptr, std::size_t size) {
-    assert(size == sizeof(ClientAsyncReaderWriter));
+  static void operator delete(void* /*ptr*/, std::size_t size) {
+    GPR_CODEGEN_ASSERT(size == sizeof(ClientAsyncReaderWriter));
   }
 
   // This operator should never be called as the memory should be freed as part
@@ -523,10 +521,10 @@ class ClientAsyncReaderWriter final
   // delete to the operator new so that some compilers will not complain (see
   // https://github.com/grpc/grpc/issues/11301) Note at the time of adding this
   // there are no tests catching the compiler warning.
-  static void operator delete(void*, void*) { assert(0); }
+  static void operator delete(void*, void*) { GPR_CODEGEN_ASSERT(false); }
 
   void StartCall(void* tag) override {
-    assert(!started_);
+    GPR_CODEGEN_ASSERT(!started_);
     started_ = true;
     StartCallInternal(tag);
   }
@@ -539,7 +537,7 @@ class ClientAsyncReaderWriter final
   ///     is updated with it, and then the receiving initial metadata can
   ///     be accessed through this \a ClientContext.
   void ReadInitialMetadata(void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     GPR_CODEGEN_ASSERT(!context_->initial_metadata_received_);
 
     meta_ops_.set_output_tag(tag);
@@ -548,7 +546,7 @@ class ClientAsyncReaderWriter final
   }
 
   void Read(R* msg, void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     read_ops_.set_output_tag(tag);
     if (!context_->initial_metadata_received_) {
       read_ops_.RecvInitialMetadata(context_);
@@ -558,7 +556,7 @@ class ClientAsyncReaderWriter final
   }
 
   void Write(const W& msg, void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     write_ops_.set_output_tag(tag);
     // TODO(ctiller): don't assert
     GPR_CODEGEN_ASSERT(write_ops_.SendMessage(msg).ok());
@@ -566,7 +564,7 @@ class ClientAsyncReaderWriter final
   }
 
   void Write(const W& msg, ::grpc::WriteOptions options, void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     write_ops_.set_output_tag(tag);
     if (options.is_last_message()) {
       options.set_buffer_hint();
@@ -578,7 +576,7 @@ class ClientAsyncReaderWriter final
   }
 
   void WritesDone(void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     write_ops_.set_output_tag(tag);
     write_ops_.ClientSendClose();
     call_.PerformOps(&write_ops_);
@@ -589,7 +587,7 @@ class ClientAsyncReaderWriter final
   ///   - the \a ClientContext associated with this call is updated with
   ///     possible initial and trailing metadata sent from the server.
   void Finish(::grpc::Status* status, void* tag) override {
-    assert(started_);
+    GPR_CODEGEN_ASSERT(started_);
     finish_ops_.set_output_tag(tag);
     if (!context_->initial_metadata_received_) {
       finish_ops_.RecvInitialMetadata(context_);
@@ -601,13 +599,12 @@ class ClientAsyncReaderWriter final
  private:
   friend class internal::ClientAsyncReaderWriterFactory<W, R>;
   ClientAsyncReaderWriter(::grpc::internal::Call call,
-                          ::grpc_impl::ClientContext* context, bool start,
-                          void* tag)
+                          ::grpc::ClientContext* context, bool start, void* tag)
       : context_(context), call_(call), started_(start) {
     if (start) {
       StartCallInternal(tag);
     } else {
-      assert(tag == nullptr);
+      GPR_CODEGEN_ASSERT(tag == nullptr);
     }
   }
 
@@ -622,7 +619,7 @@ class ClientAsyncReaderWriter final
     }
   }
 
-  ::grpc_impl::ClientContext* context_;
+  ::grpc::ClientContext* context_;
   ::grpc::internal::Call call_;
   bool started_;
   ::grpc::internal::CallOpSet<::grpc::internal::CallOpRecvInitialMetadata>

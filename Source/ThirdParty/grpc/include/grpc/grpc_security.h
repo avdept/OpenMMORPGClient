@@ -119,6 +119,18 @@ GRPCAPI void grpc_ssl_session_cache_destroy(grpc_ssl_session_cache* cache);
 GRPCAPI grpc_arg
 grpc_ssl_session_cache_create_channel_arg(grpc_ssl_session_cache* cache);
 
+/** --- grpc_call_credentials object.
+
+   A call credentials object represents a way to authenticate on a particular
+   call. These credentials can be composed with a channel credentials object
+   so that they are sent with every call on this channel.  */
+
+typedef struct grpc_call_credentials grpc_call_credentials;
+
+/** Releases a call credentials object.
+   The creator of the credentials object is responsible for its release. */
+GRPCAPI void grpc_call_credentials_release(grpc_call_credentials* creds);
+
 /** --- grpc_channel_credentials object. ---
 
    A channel credentials object represents a way to authenticate a client on a
@@ -132,8 +144,24 @@ GRPCAPI void grpc_channel_credentials_release(grpc_channel_credentials* creds);
 
 /** Creates default credentials to connect to a google gRPC service.
    WARNING: Do NOT use this credentials to connect to a non-google service as
-   this could result in an oauth2 token leak. */
-GRPCAPI grpc_channel_credentials* grpc_google_default_credentials_create(void);
+   this could result in an oauth2 token leak. The security level of the
+   resulting connection is GRPC_PRIVACY_AND_INTEGRITY.
+
+   If specified, the supplied call credentials object will be attached to the
+   returned channel credentials object. The call_credentials object must remain
+   valid throughout the lifetime of the returned grpc_channel_credentials
+   object. It is expected that the call credentials object was generated
+   according to the Application Default Credentials mechanism and asserts the
+   identity of the default service account of the machine. Supplying any other
+   sort of call credential will result in undefined behavior, up to and
+   including the sudden and unexpected failure of RPCs.
+
+   If nullptr is supplied, the returned channel credentials object will use a
+   call credentials object based on the Application Default Credentials
+   mechanism.
+*/
+GRPCAPI grpc_channel_credentials* grpc_google_default_credentials_create(
+    grpc_call_credentials* call_credentials);
 
 /** Callback for getting the SSL roots override from the application.
    In case of success, *pem_roots_certs must be set to a NULL terminated string
@@ -208,6 +236,7 @@ typedef struct {
 /** Deprecated in favor of grpc_ssl_server_credentials_create_ex. It will be
    removed after all of its call sites are migrated to
    grpc_ssl_server_credentials_create_ex. Creates an SSL credentials object.
+   The security level of the resulting connection is GRPC_PRIVACY_AND_INTEGRITY.
    - pem_root_certs is the NULL-terminated string containing the PEM encoding
      of the server root certificates. If this parameter is NULL, the
      implementation will first try to dereference the file pointed by the
@@ -239,6 +268,7 @@ GRPCAPI grpc_channel_credentials* grpc_ssl_credentials_create(
     const verify_peer_options* verify_options, void* reserved);
 
 /* Creates an SSL credentials object.
+   The security level of the resulting connection is GRPC_PRIVACY_AND_INTEGRITY.
    - pem_root_certs is the NULL-terminated string containing the PEM encoding
      of the server root certificates. If this parameter is NULL, the
      implementation will first try to dereference the file pointed by the
@@ -269,22 +299,13 @@ GRPCAPI grpc_channel_credentials* grpc_ssl_credentials_create_ex(
     const char* pem_root_certs, grpc_ssl_pem_key_cert_pair* pem_key_cert_pair,
     const grpc_ssl_verify_peer_options* verify_options, void* reserved);
 
-/** --- grpc_call_credentials object.
-
-   A call credentials object represents a way to authenticate on a particular
-   call. These credentials can be composed with a channel credentials object
-   so that they are sent with every call on this channel.  */
-
-typedef struct grpc_call_credentials grpc_call_credentials;
-
-/** Releases a call credentials object.
-   The creator of the credentials object is responsible for its release. */
-GRPCAPI void grpc_call_credentials_release(grpc_call_credentials* creds);
-
-/** Creates a composite channel credentials object. */
+/** Creates a composite channel credentials object. The security level of
+ * resulting connection is determined by channel_creds. */
 GRPCAPI grpc_channel_credentials* grpc_composite_channel_credentials_create(
     grpc_channel_credentials* channel_creds, grpc_call_credentials* call_creds,
     void* reserved);
+
+/** --- composite credentials. */
 
 /** Creates a composite call credentials object. */
 GRPCAPI grpc_call_credentials* grpc_composite_call_credentials_create(
@@ -386,6 +407,14 @@ typedef struct {
   void* reserved;
 } grpc_auth_metadata_context;
 
+/** Performs a deep copy from \a from to \a to. **/
+GRPCAPI void grpc_auth_metadata_context_copy(grpc_auth_metadata_context* from,
+                                             grpc_auth_metadata_context* to);
+
+/** Releases internal resources held by \a context. **/
+GRPCAPI void grpc_auth_metadata_context_reset(
+    grpc_auth_metadata_context* context);
+
 /** Maximum number of metadata entries returnable by a credentials plugin via
     a synchronous return. */
 #define GRPC_METADATA_CREDENTIALS_PLUGIN_SYNC_MAX 4
@@ -421,6 +450,10 @@ typedef struct {
       size_t* num_creds_md, grpc_status_code* status,
       const char** error_details);
 
+  /** Implements debug string of the given plugin. This method returns an
+   * allocated string that the caller needs to free using gpr_free() */
+  char* (*debug_string)(void* state);
+
   /** Destroys the plugin state. */
   void (*destroy)(void* state);
 
@@ -431,9 +464,11 @@ typedef struct {
   const char* type;
 } grpc_metadata_credentials_plugin;
 
-/** Creates a credentials object from a plugin. */
+/** Creates a credentials object from a plugin with a specified minimum security
+ * level. */
 GRPCAPI grpc_call_credentials* grpc_metadata_credentials_create_from_plugin(
-    grpc_metadata_credentials_plugin plugin, void* reserved);
+    grpc_metadata_credentials_plugin plugin,
+    grpc_security_level min_security_level, void* reserved);
 
 /** --- Secure channel creation. --- */
 
@@ -653,8 +688,9 @@ GRPCAPI void grpc_alts_credentials_options_destroy(
     grpc_alts_credentials_options* options);
 
 /**
- * This method creates an ALTS channel credential object. It is used for
- * experimental purpose for now and subject to change.
+ * This method creates an ALTS channel credential object. The security
+ * level of the resulting connection is GRPC_PRIVACY_AND_INTEGRITY.
+ * It is used for experimental purpose for now and subject to change.
  *
  * - options: grpc ALTS credentials options instance for client.
  *
@@ -677,8 +713,10 @@ GRPCAPI grpc_server_credentials* grpc_alts_server_credentials_create(
 /** --- Local channel/server credentials --- **/
 
 /**
- * This method creates a local channel credential object. It is used for
- * experimental purpose for now and subject to change.
+ * This method creates a local channel credential object. The security level
+ * of the resulting connection is GRPC_PRIVACY_AND_INTEGRITY for UDS and
+ * GRPC_SECURITY_NONE for LOCAL_TCP. It is used for experimental purpose
+ * for now and subject to change.
  *
  * - type: local connection type
  *
@@ -698,8 +736,12 @@ GRPCAPI grpc_channel_credentials* grpc_local_credentials_create(
 GRPCAPI grpc_server_credentials* grpc_local_server_credentials_create(
     grpc_local_connect_type type);
 
-/** --- SPIFFE and HTTPS-based TLS channel/server credentials ---
+/** --- TLS channel/server credentials ---
  * It is used for experimental purpose for now and subject to change. */
+
+/** Struct for indicating errors. It is used for
+ *  experimental purpose for now and subject to change. */
+typedef struct grpc_tls_error_details grpc_tls_error_details;
 
 /** Config for TLS key materials. It is used for
  *  experimental purpose for now and subject to change. */
@@ -730,6 +772,19 @@ GRPCAPI grpc_tls_credentials_options* grpc_tls_credentials_options_create(void);
 GRPCAPI int grpc_tls_credentials_options_set_cert_request_type(
     grpc_tls_credentials_options* options,
     grpc_ssl_client_certificate_request_type type);
+
+/** Set grpc_tls_server_verification_option field in credentials options
+    with the provided server_verification_option. options should not be NULL.
+    This should be called only on the client side.
+    If grpc_tls_server_verification_option is not
+    GRPC_TLS_SERVER_VERIFICATION, use of a customer server
+    authorization check (grpc_tls_server_authorization_check_config)
+    will be mandatory.
+    It returns 1 on success and 0 on failure. It is used for
+    experimental purpose for now and subject to change. */
+GRPCAPI int grpc_tls_credentials_options_set_server_verification_option(
+    grpc_tls_credentials_options* options,
+    grpc_tls_server_verification_option server_verification_option);
 
 /** Set grpc_tls_key_materials_config field in credentials options
     with the provided config struct whose ownership is transferred.
@@ -767,16 +822,33 @@ GRPCAPI grpc_tls_key_materials_config* grpc_tls_key_materials_config_create(
     void);
 
 /** Set grpc_tls_key_materials_config instance with provided a TLS certificate.
-    config will take the ownership of pem_root_certs and pem_key_cert_pairs.
     It's valid for the caller to provide nullptr pem_root_certs, in which case
     the gRPC-provided root cert will be used. pem_key_cert_pairs should not be
-    NULL. It returns 1 on success and 0 on failure. It is used for
-    experimental purpose for now and subject to change.
+    NULL.
+    The ownerships of |pem_root_certs| and |pem_key_cert_pairs| remain with the
+    caller.
+    It returns 1 on success and 0 on failure. It is used for experimental
+    purpose for now and subject to change.
  */
 GRPCAPI int grpc_tls_key_materials_config_set_key_materials(
     grpc_tls_key_materials_config* config, const char* pem_root_certs,
     const grpc_ssl_pem_key_cert_pair** pem_key_cert_pairs,
     size_t num_key_cert_pairs);
+
+/** Set grpc_tls_key_materials_config instance with a provided version number,
+    which is used to keep track of the version of key materials.
+    It returns 1 on success and 0 on failure. It is used for
+    experimental purpose for now and subject to change.
+ */
+GRPCAPI int grpc_tls_key_materials_config_set_version(
+    grpc_tls_key_materials_config* config, int version);
+
+/** Get the version number of a grpc_tls_key_materials_config instance.
+    It returns the version number on success and -1 on failure.
+    It is used for experimental purpose for now and subject to change.
+ */
+GRPCAPI int grpc_tls_key_materials_config_get_version(
+    grpc_tls_key_materials_config* config);
 
 /** --- TLS credential reload config. ---
     It is used for experimental purpose for now and subject to change.*/
@@ -790,19 +862,34 @@ typedef struct grpc_tls_credential_reload_arg grpc_tls_credential_reload_arg;
 typedef void (*grpc_tls_on_credential_reload_done_cb)(
     grpc_tls_credential_reload_arg* arg);
 
-/** A struct containing all information necessary to schedule/cancel
-    a credential reload request. cb and cb_user_data represent a gRPC-provided
-    callback and an argument passed to it. key_materials is an in/output
-    parameter containing currently used/newly reloaded credentials. status and
-    error_details are used to hold information about errors occurred when a
-    credential reload request is scheduled/cancelled. It is used for
-    experimental purpose for now and subject to change. */
+/** A struct containing all information necessary to schedule/cancel a
+    credential reload request.
+    - cb and cb_user_data represent a gRPC-provided
+      callback and an argument passed to it.
+    - key_materials_config is an in/output parameter containing currently
+      used/newly reloaded credentials. If credential reload does not result in
+      a new credential, key_materials_config should not be modified. The same
+      key_materials_config object can be updated if new key materials is
+      available.
+    - status and error_details are used to hold information about
+      errors occurred when a credential reload request is scheduled/cancelled.
+    - config is a pointer to the unique grpc_tls_credential_reload_config
+      instance that this argument corresponds to.
+    - context is a pointer to a wrapped language implementation of this
+      grpc_tls_credential_reload_arg instance.
+    - destroy_context is a pointer to a caller-provided method that cleans
+      up any data associated with the context pointer.
+    It is used for experimental purposes for now and subject to change.
+*/
 struct grpc_tls_credential_reload_arg {
   grpc_tls_on_credential_reload_done_cb cb;
   void* cb_user_data;
   grpc_tls_key_materials_config* key_materials_config;
   grpc_ssl_certificate_config_reload_status status;
-  const char* error_details;
+  grpc_tls_error_details* error_details;
+  grpc_tls_credential_reload_config* config;
+  void* context;
+  void (*destroy_context)(void* ctx);
 };
 
 /** Create a grpc_tls_credential_reload_config instance.
@@ -811,8 +898,9 @@ struct grpc_tls_credential_reload_arg {
     - schedule is a pointer to an application-provided callback used to invoke
       credential reload API. The implementation of this method has to be
       non-blocking, but can be performed synchronously or asynchronously.
-      1) If processing occurs synchronously, it populates arg->key_materials,
-      arg->status, and arg->error_details and returns zero.
+      1) If processing occurs synchronously, it populates
+      arg->key_materials_config, arg->status, and arg->error_details
+      and returns zero.
       2) If processing occurs asynchronously, it returns a non-zero value.
       The application then invokes arg->cb when processing is completed. Note
       that arg->cb cannot be invoked before schedule API returns.
@@ -847,24 +935,39 @@ typedef void (*grpc_tls_on_server_authorization_check_done_cb)(
     grpc_tls_server_authorization_check_arg* arg);
 
 /** A struct containing all information necessary to schedule/cancel a server
-   authorization check request. cb and cb_user_data represent a gRPC-provided
-   callback and an argument passed to it. success will store the result of
-   server authorization check. That is, if success returns a non-zero value, it
-   means the authorization check passes and if returning zero, it means the
-   check fails. target_name is the name of an endpoint the channel is connecting
-   to and certificate represents a complete certificate chain including both
-   signing and leaf certificates. status and error_details contain information
-   about errors occurred when a server authorization check request is
-   scheduled/cancelled. It is used for experimental purpose for now and subject
-   to change.*/
+    authorization check request.
+    - cb and cb_user_data represent a gRPC-provided callback and an argument
+      passed to it.
+    - success will store the result of server authorization check. That is,
+      if success returns a non-zero value, it means the authorization check
+      passes and if returning zero, it means the check fails.
+   - target_name is the name of an endpoint the channel is connecting to.
+   - peer_cert represents a complete certificate chain including both
+     signing and leaf certificates.
+   - status and error_details contain information
+     about errors occurred when a server authorization check request is
+     scheduled/cancelled.
+   - config is a pointer to the unique
+     grpc_tls_server_authorization_check_config instance that this argument
+     corresponds to.
+   - context is a pointer to a wrapped language implementation of this
+     grpc_tls_server_authorization_check_arg instance.
+   - destroy_context is a pointer to a caller-provided method that cleans
+      up any data associated with the context pointer.
+   It is used for experimental purpose for now and subject to change.
+*/
 struct grpc_tls_server_authorization_check_arg {
   grpc_tls_on_server_authorization_check_done_cb cb;
   void* cb_user_data;
   int success;
   const char* target_name;
   const char* peer_cert;
+  const char* peer_cert_full_chain;
   grpc_status_code status;
-  const char* error_details;
+  grpc_tls_error_details* error_details;
+  grpc_tls_server_authorization_check_config* config;
+  void* context;
+  void (*destroy_context)(void* ctx);
 };
 
 /** Create a grpc_tls_server_authorization_check_config instance.
@@ -896,11 +999,10 @@ grpc_tls_server_authorization_check_config_create(
                    grpc_tls_server_authorization_check_arg* arg),
     void (*destruct)(void* config_user_data));
 
-/** --- SPIFFE channel/server credentials --- **/
-
 /**
- * This method creates a TLS SPIFFE channel credential object.
- * It takes ownership of the options parameter.
+ * This method creates a TLS channel credential object.
+ * It takes ownership of the options parameter. The security level
+ * of the resulting connection is GRPC_PRIVACY_AND_INTEGRITY.
  *
  * - options: grpc TLS credentials options instance.
  *
@@ -910,7 +1012,7 @@ grpc_tls_server_authorization_check_config_create(
  * to change.
  */
 
-grpc_channel_credentials* grpc_tls_spiffe_credentials_create(
+grpc_channel_credentials* grpc_tls_credentials_create(
     grpc_tls_credentials_options* options);
 
 /**
@@ -924,7 +1026,7 @@ grpc_channel_credentials* grpc_tls_spiffe_credentials_create(
  * It is used for experimental purpose for now and subject
  * to change.
  */
-grpc_server_credentials* grpc_tls_spiffe_server_credentials_create(
+grpc_server_credentials* grpc_tls_server_credentials_create(
     grpc_tls_credentials_options* options);
 
 #ifdef __cplusplus

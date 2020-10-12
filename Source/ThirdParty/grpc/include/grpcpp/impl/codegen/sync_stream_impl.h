@@ -20,8 +20,8 @@
 
 #include <grpcpp/impl/codegen/call.h>
 #include <grpcpp/impl/codegen/channel_interface.h>
-#include <grpcpp/impl/codegen/client_context_impl.h>
-#include <grpcpp/impl/codegen/completion_queue_impl.h>
+#include <grpcpp/impl/codegen/client_context.h>
+#include <grpcpp/impl/codegen/completion_queue.h>
 #include <grpcpp/impl/codegen/core_codegen_interface.h>
 #include <grpcpp/impl/codegen/server_context_impl.h>
 #include <grpcpp/impl/codegen/service_type.h>
@@ -38,7 +38,7 @@ class ClientStreamingInterface {
   /// Block waiting until the stream finishes and a final status of the call is
   /// available.
   ///
-  /// It is appropriate to call this method when both:
+  /// It is appropriate to call this method exactly once when both:
   ///   * the calling code (client-side) has no more message to send
   ///     (this can be declared implicitly by calling this method, or
   ///     explicitly through an earlier call to <i>WritesDone</i> method of the
@@ -162,7 +162,7 @@ class ClientReaderFactory {
   template <class W>
   static ClientReader<R>* Create(::grpc::ChannelInterface* channel,
                                  const ::grpc::internal::RpcMethod& method,
-                                 ::grpc_impl::ClientContext* context,
+                                 ::grpc::ClientContext* context,
                                  const W& request) {
     return new ClientReader<R>(channel, method, context, request);
   }
@@ -193,7 +193,8 @@ class ClientReader final : public ClientReaderInterface<R> {
   }
 
   bool NextMessageSize(uint32_t* sz) override {
-    *sz = call_.max_receive_message_size();
+    int result = call_.max_receive_message_size();
+    *sz = (result > 0) ? result : UINT32_MAX;
     return true;
   }
 
@@ -230,8 +231,8 @@ class ClientReader final : public ClientReaderInterface<R> {
 
  private:
   friend class internal::ClientReaderFactory<R>;
-  ::grpc_impl::ClientContext* context_;
-  ::grpc_impl::CompletionQueue cq_;
+  ::grpc::ClientContext* context_;
+  ::grpc::CompletionQueue cq_;
   ::grpc::internal::Call call_;
 
   /// Block to create a stream and write the initial metadata and \a request
@@ -240,7 +241,7 @@ class ClientReader final : public ClientReaderInterface<R> {
   template <class W>
   ClientReader(::grpc::ChannelInterface* channel,
                const ::grpc::internal::RpcMethod& method,
-               ::grpc_impl::ClientContext* context, const W& request)
+               ::grpc::ClientContext* context, const W& request)
       : context_(context),
         cq_(grpc_completion_queue_attributes{
             GRPC_CQ_CURRENT_VERSION, GRPC_CQ_PLUCK, GRPC_CQ_DEFAULT_POLLING,
@@ -281,8 +282,7 @@ class ClientWriterFactory {
   template <class R>
   static ClientWriter<W>* Create(::grpc::ChannelInterface* channel,
                                  const ::grpc::internal::RpcMethod& method,
-                                 ::grpc_impl::ClientContext* context,
-                                 R* response) {
+                                 ::grpc::ClientContext* context, R* response) {
     return new ClientWriter<W>(channel, method, context, response);
   }
 };
@@ -375,7 +375,7 @@ class ClientWriter : public ClientWriterInterface<W> {
   template <class R>
   ClientWriter(::grpc::ChannelInterface* channel,
                const ::grpc::internal::RpcMethod& method,
-               ::grpc_impl::ClientContext* context, R* response)
+               ::grpc::ClientContext* context, R* response)
       : context_(context),
         cq_(grpc_completion_queue_attributes{
             GRPC_CQ_CURRENT_VERSION, GRPC_CQ_PLUCK, GRPC_CQ_DEFAULT_POLLING,
@@ -394,12 +394,12 @@ class ClientWriter : public ClientWriterInterface<W> {
     }
   }
 
-  ::grpc_impl::ClientContext* context_;
+  ::grpc::ClientContext* context_;
   ::grpc::internal::CallOpSet<::grpc::internal::CallOpRecvInitialMetadata,
                               ::grpc::internal::CallOpGenericRecvMessage,
                               ::grpc::internal::CallOpClientRecvStatus>
       finish_ops_;
-  ::grpc_impl::CompletionQueue cq_;
+  ::grpc::CompletionQueue cq_;
   ::grpc::internal::Call call_;
 };
 
@@ -418,7 +418,7 @@ class ClientReaderWriterInterface : public internal::ClientStreamingInterface,
   virtual void WaitForInitialMetadata() = 0;
 
   /// Half close writing from the client. (signal that the stream of messages
-  /// coming from the clinet is complete).
+  /// coming from the client is complete).
   /// Blocks until currently-pending writes are completed.
   /// Thread-safe with respect to \a ReaderInterface::Read
   ///
@@ -433,7 +433,7 @@ class ClientReaderWriterFactory {
   static ClientReaderWriter<W, R>* Create(
       ::grpc::ChannelInterface* channel,
       const ::grpc::internal::RpcMethod& method,
-      ::grpc_impl::ClientContext* context) {
+      ::grpc::ClientContext* context) {
     return new ClientReaderWriter<W, R>(channel, method, context);
   }
 };
@@ -463,7 +463,8 @@ class ClientReaderWriter final : public ClientReaderWriterInterface<W, R> {
   }
 
   bool NextMessageSize(uint32_t* sz) override {
-    *sz = call_.max_receive_message_size();
+    int result = call_.max_receive_message_size();
+    *sz = (result > 0) ? result : UINT32_MAX;
     return true;
   }
 
@@ -541,8 +542,8 @@ class ClientReaderWriter final : public ClientReaderWriterInterface<W, R> {
  private:
   friend class internal::ClientReaderWriterFactory<W, R>;
 
-  ::grpc_impl::ClientContext* context_;
-  ::grpc_impl::CompletionQueue cq_;
+  ::grpc::ClientContext* context_;
+  ::grpc::CompletionQueue cq_;
   ::grpc::internal::Call call_;
 
   /// Block to create a stream and write the initial metadata and \a request
@@ -550,7 +551,7 @@ class ClientReaderWriter final : public ClientReaderWriterInterface<W, R> {
   /// used to send to the server when starting the call.
   ClientReaderWriter(::grpc::ChannelInterface* channel,
                      const ::grpc::internal::RpcMethod& method,
-                     ::grpc_impl::ClientContext* context)
+                     ::grpc::ClientContext* context)
       : context_(context),
         cq_(grpc_completion_queue_attributes{
             GRPC_CQ_CURRENT_VERSION, GRPC_CQ_PLUCK, GRPC_CQ_DEFAULT_POLLING,
@@ -597,7 +598,8 @@ class ServerReader final : public ServerReaderInterface<R> {
   }
 
   bool NextMessageSize(uint32_t* sz) override {
-    *sz = call_->max_receive_message_size();
+    int result = call_->max_receive_message_size();
+    *sz = (result > 0) ? result : UINT32_MAX;
     return true;
   }
 
@@ -613,7 +615,7 @@ class ServerReader final : public ServerReaderInterface<R> {
   ServerContext* const ctx_;
 
   template <class ServiceType, class RequestType, class ResponseType>
-  friend class ::grpc::internal::ClientStreamingHandler;
+  friend class ::grpc_impl::internal::ClientStreamingHandler;
 
   ServerReader(::grpc::internal::Call* call, ::grpc_impl::ServerContext* ctx)
       : call_(call), ctx_(ctx) {}
@@ -688,7 +690,7 @@ class ServerWriter final : public ServerWriterInterface<W> {
   ::grpc_impl::ServerContext* const ctx_;
 
   template <class ServiceType, class RequestType, class ResponseType>
-  friend class ::grpc::internal::ServerStreamingHandler;
+  friend class ::grpc_impl::internal::ServerStreamingHandler;
 
   ServerWriter(::grpc::internal::Call* call, ::grpc_impl::ServerContext* ctx)
       : call_(call), ctx_(ctx) {}
@@ -724,7 +726,8 @@ class ServerReaderWriterBody final {
   }
 
   bool NextMessageSize(uint32_t* sz) {
-    *sz = call_->max_receive_message_size();
+    int result = call_->max_receive_message_size();
+    *sz = (result > 0) ? result : UINT32_MAX;
     return true;
   }
 
@@ -800,7 +803,7 @@ class ServerReaderWriter final : public ServerReaderWriterInterface<W, R> {
  private:
   internal::ServerReaderWriterBody<W, R> body_;
 
-  friend class ::grpc::internal::TemplatedBidiStreamingHandler<
+  friend class ::grpc_impl::internal::TemplatedBidiStreamingHandler<
       ServerReaderWriter<W, R>, false>;
   ServerReaderWriter(::grpc::internal::Call* call,
                      ::grpc_impl::ServerContext* ctx)
@@ -870,7 +873,7 @@ class ServerUnaryStreamer final
   bool read_done_;
   bool write_done_;
 
-  friend class ::grpc::internal::TemplatedBidiStreamingHandler<
+  friend class ::grpc_impl::internal::TemplatedBidiStreamingHandler<
       ServerUnaryStreamer<RequestType, ResponseType>, true>;
   ServerUnaryStreamer(::grpc::internal::Call* call,
                       ::grpc_impl::ServerContext* ctx)
@@ -932,7 +935,7 @@ class ServerSplitStreamer final
   internal::ServerReaderWriterBody<ResponseType, RequestType> body_;
   bool read_done_;
 
-  friend class ::grpc::internal::TemplatedBidiStreamingHandler<
+  friend class ::grpc_impl::internal::TemplatedBidiStreamingHandler<
       ServerSplitStreamer<RequestType, ResponseType>, false>;
   ServerSplitStreamer(::grpc::internal::Call* call,
                       ::grpc_impl::ServerContext* ctx)
