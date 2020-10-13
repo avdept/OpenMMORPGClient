@@ -63,7 +63,7 @@ void USocketObject::InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCP
 
     UDPSocket = FUdpSocketBuilder(TEXT("UDP_SOCKET"))
         .AsReusable()
-        .BoundToPort(UDPServerP)
+        .BoundToPort(14000)
         .WithBroadcast()
         .WithReceiveBufferSize(BufferSize)
         .WithSendBufferSize(BufferSize)

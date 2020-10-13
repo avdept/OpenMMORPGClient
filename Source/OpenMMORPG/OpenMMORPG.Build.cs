@@ -35,7 +35,7 @@ public class OpenMMORPG : ModuleRules
 			string GrpcLibrariesPath = Path.Combine(ThirdPartyPath, "grpc", "lib", "Win64");
 			string AbseilPath = Path.Combine(ThirdPartyPath, "abseil", "lib", "Win64");
 			string RE2Path = Path.Combine(ThirdPartyPath, "re2", "lib", "Win64");
-			
+
 			//Abseil-cpp
 			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "absl_strings.lib"));
 			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "absl_strings_internal.lib"));
@@ -80,17 +80,43 @@ public class OpenMMORPG : ModuleRules
 			string GrpcLibrariesPath = Path.Combine(ThirdPartyPath, "grpc", "lib", "Mac");
 			string ProtobufLibrariesPath = Path.Combine(ThirdPartyPath, "protobuf", "lib", "Mac");
 			string OpenSSLLibrariesPath = Path.Combine(ThirdPartyPath, "openssl", "lib", "Mac");
+			string AbseilPath = Path.Combine(ThirdPartyPath, "abseil", "lib", "Mac");
+			string RE2Path = Path.Combine(ThirdPartyPath, "re2", "lib", "Mac");
+			// GRPC
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libaddress_sorting.a"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libcares.a"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libgpr.a"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libgrpc.a"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libgrpc++.a"));
 			PublicAdditionalLibraries.Add(Path.Combine(GrpcLibrariesPath, "libupb.a"));
-
-
+			//Abseil
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_bad_optional_access.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_base.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_cord.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_cord.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_graphcycles_internal.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_int128.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_malloc_internal.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_raw_logging_internal.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_spinlock_wait.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_stacktrace.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_status.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_str_format_internal.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_strings_internal.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_strings.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_symbolize.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_synchronization.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_throw_delegate.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_time_zone.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(AbseilPath, "libabsl_time.a"));
+			//Protobuf
 			PublicAdditionalLibraries.Add(Path.Combine(ProtobufLibrariesPath, "libprotobuf.a"));
-			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "libcrypto.1.1.dylib"));
-			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "libssl.1.1.dylib"));
+			//Boring SSL
+			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "libcrypto.a"));
+			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "libssl.a"));
+			//re2
+			PublicAdditionalLibraries.Add(Path.Combine(RE2Path, "libre2.a"));
+
 		}
 
 		PublicDefinitions.Add("GOOGLE_PROTOBUF_NO_RTTI=1");
