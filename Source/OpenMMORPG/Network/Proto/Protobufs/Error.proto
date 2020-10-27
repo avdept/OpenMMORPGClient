@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "DisableWarnings.proto";
+
+package proto_messages;
+
+option go_package="github.com/avdept/OpenMMORPG_Server/protos";
+
+message Error {
+  string ErrorMessage = 1;
+  bool ShouldQuitImmediately = 2;
+}

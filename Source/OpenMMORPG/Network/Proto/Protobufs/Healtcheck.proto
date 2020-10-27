@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package utility_messages;
 
+import "DisableWarnings.proto";
 option go_package="github.com/avdept/OpenMMORPG_Server/protos";
 
 message HealthcheckResult {

@@ -38,7 +38,7 @@ UHTTPRequestManager* UHTTPRequestManager::GetRequest(const FString &url) {
 
 
     auto HttpRequest = FHttpModule::Get().CreateRequest();
-    HttpRequest->SetHeader("Authorization", "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJvcGVubW1vcnBnX2xvZ2luc2VydmVyIiwiZXhwIjoxNjAzNjQ0OTY5LCJpYXQiOjE2MDEyMjU3NjksImlzcyI6Im9wZW5tbW9ycGdfbG9naW5zZXJ2ZXIiLCJqdGkiOiJlOThlY2EyNS1lYzMzLTQ4YzgtYWQ5NS0wYzBhY2MzNGJmYzkiLCJuYmYiOjE2MDEyMjU3NjgsInN1YiI6IjEiLCJ0eXAiOiJhY2Nlc3MifQ.NdB7dU71-yXdwx-hzxsKHRl0GumBwwUGodOHtefbxlwLtq_FfXL8o9bAaCM9nJgGdzrAhPzGcf2ju08pxjYMpQ");
+    HttpRequest->SetHeader("Authorization", "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJvcGVubW1vcnBnX2xvZ2luc2VydmVyIiwiZXhwIjoxNjA2MTUwNDg3LCJpYXQiOjE2MDM3MzEyODcsImlzcyI6Im9wZW5tbW9ycGdfbG9naW5zZXJ2ZXIiLCJqdGkiOiI1ZGEyMjhkOS05YzQ2LTRmMTktOGM5Mi0wNzYxN2JiNjJmYzMiLCJuYmYiOjE2MDM3MzEyODYsInN1YiI6IjEiLCJ0eXAiOiJhY2Nlc3MifQ.LwZ2q9Bk5oIMWIT4ufLWbNfp1AGjn7ieI4vKw1Gf9ml0K61ORW2xOyv9ICAmzOuC7IG5H0-ZVIBqaCnB4I-QgA");
     HttpRequest->SetVerb("GET");
     HttpRequest->SetURL(CreateUrl(url));
     HttpRequest->OnProcessRequestComplete().BindUObject(this, &UHTTPRequestManager::OnReady);

@@ -7,7 +7,7 @@
 #include "Proto/MessageModels.pb.h"
 #include "Network/Handlers/MessageEncoder.h"
 #include "grpcpp/create_channel.h"
-#include "Proto/Messages/Grpcs/Healtcheck.grpc.pb.h"
+#include "Proto/Healtcheck.grpc.pb.h"
 
 
 FSocket *USocketObject::TCPSocket = nullptr;
@@ -111,14 +111,14 @@ bool USocketObject::SendByUDP(google::protobuf::Message *message)
 
 void USocketObject::Reconnect()
 {
-    TCPSocket->Close();
+    //TCPSocket->Close();
 
-    uint32 OutIP;
-    TCPAddress->GetIp(OutIP);
+    //uint32 OutIP;
+    //TCPAddress->GetIp(OutIP);
 
-    FString ip = FString::Printf(TEXT("%d.%d.%d.%d"), 0xff & (OutIP >> 24), 0xff & (OutIP >> 16), 0xff & (OutIP >> 8), 0xff & OutIP);
+    //FString ip = FString::Printf(TEXT("%d.%d.%d.%d"), 0xff & (OutIP >> 24), 0xff & (OutIP >> 16), 0xff & (OutIP >> 8), 0xff & OutIP);
 
-    InitSocket(ip, TCPLocalPort, TCPAddress->GetPort(), UDPLocalPort, UDPAddress->GetPort());
+    //InitSocket(ip, TCPLocalPort, TCPAddress->GetPort(), UDPLocalPort, UDPAddress->GetPort());
 }
 
 bool USocketObject::Alive()
@@ -144,9 +144,7 @@ void USocketObject::RunUDPSocketReceiver()
 {
     if (UDPSocket == nullptr) return;
     GLog->Log("Listening from UDP socket");
-    UDPSocket;
     const FTimespan ThreadWaitTime = FTimespan::FromMilliseconds(30);
-
 
     try {
         UDPReceiver = new FUdpSocketReceiver(UDPSocket, ThreadWaitTime, TEXT("UDP Receiver"));

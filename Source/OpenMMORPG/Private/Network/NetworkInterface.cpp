@@ -12,7 +12,7 @@
 #include "ThirdParty/grpc/include/grpcpp/create_channel.h"
 #include "OpenMMORPG/Public/Network/Handlers/MessageEncoder.h"
 #include "OpenMMORPG/Network/Proto/MessageModels.pb.h"
-#include "OpenMMORPG/Network/Proto/Messages/Grpcs/Healtcheck.grpc.pb.h"
+#include "OpenMMORPG/Network/Proto/Healtcheck.grpc.pb.h"
 
 
 
@@ -58,4 +58,9 @@ void UNetworkInterface::SendGRCPMessage()
     {
         GLog->Log("Error");   
     }
+}
+
+void UNetworkInterface::GetCharactersList(UWorldServerEntity *ServerEntity)
+{
+    GLog->Log("Fetching characters from " + ServerEntity->ServerName);
 }

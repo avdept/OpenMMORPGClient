@@ -49,7 +49,6 @@ void UOpenMMORPG_GameInstance::OnServerListFetched(bool bSuccess, UHTTPRequestMa
     ERequestResult status)
 {
     UWorldServerManager::ServerList = UWorldServerEntity::FromJSON(RequestManager->Data);
-    GLog->Log("Server list fetched");
 }
 
 void UOpenMMORPG_GameInstance::SetCommandLineArgs()
@@ -58,7 +57,7 @@ void UOpenMMORPG_GameInstance::SetCommandLineArgs()
     {
     #if WITH_EDITOR
         // Purely for play in editor purpose, since PIE  does not allow to pass command line args.
-        AuthToken = FString("aaabbbccc111222333");
+        AuthToken = FString("eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJvcGVubW1vcnBnX2xvZ2luc2VydmVyIiwiZXhwIjoxNjA2MTUwNDg3LCJpYXQiOjE2MDM3MzEyODcsImlzcyI6Im9wZW5tbW9ycGdfbG9naW5zZXJ2ZXIiLCJqdGkiOiI1ZGEyMjhkOS05YzQ2LTRmMTktOGM5Mi0wNzYxN2JiNjJmYzMiLCJuYmYiOjE2MDM3MzEyODYsInN1YiI6IjEiLCJ0eXAiOiJhY2Nlc3MifQ.LwZ2q9Bk5oIMWIT4ufLWbNfp1AGjn7ieI4vKw1Gf9ml0K61ORW2xOyv9ICAmzOuC7IG5H0-ZVIBqaCnB4I-QgA");
     #endif
 
     }

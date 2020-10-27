@@ -80,15 +80,16 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 };
 
 const char descriptor_table_protodef_Healtcheck_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\020Healtcheck.proto\022\020utility_messages\"\"\n\021"
-  "HealthcheckResult\022\r\n\005Alive\030\001 \001(\010\"\023\n\021Heal"
-  "thCheckParams2l\n\022HealthcheckService\022V\n\010R"
-  "unCheck\022#.utility_messages.HealthCheckPa"
-  "rams\032#.utility_messages.HealthcheckResul"
-  "t\"\000B,Z*github.com/avdept/OpenMMORPG_Serv"
-  "er/protosb\006proto3"
+  "\n\020Healtcheck.proto\022\020utility_messages\032\025Di"
+  "sableWarnings.proto\"\"\n\021HealthcheckResult"
+  "\022\r\n\005Alive\030\001 \001(\010\"\023\n\021HealthCheckParams2l\n\022"
+  "HealthcheckService\022V\n\010RunCheck\022#.utility"
+  "_messages.HealthCheckParams\032#.utility_me"
+  "ssages.HealthcheckResult\"\000B,Z*github.com"
+  "/avdept/OpenMMORPG_Server/protosb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Healtcheck_2eproto_deps[1] = {
+  &::descriptor_table_DisableWarnings_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Healtcheck_2eproto_sccs[2] = {
   &scc_info_HealthCheckParams_Healtcheck_2eproto.base,
@@ -96,8 +97,8 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Hea
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Healtcheck_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Healtcheck_2eproto = {
-  false, false, descriptor_table_protodef_Healtcheck_2eproto, "Healtcheck.proto", 257,
-  &descriptor_table_Healtcheck_2eproto_once, descriptor_table_Healtcheck_2eproto_sccs, descriptor_table_Healtcheck_2eproto_deps, 2, 0,
+  false, false, descriptor_table_protodef_Healtcheck_2eproto, "Healtcheck.proto", 280,
+  &descriptor_table_Healtcheck_2eproto_once, descriptor_table_Healtcheck_2eproto_sccs, descriptor_table_Healtcheck_2eproto_deps, 2, 1,
   schemas, file_default_instances, TableStruct_Healtcheck_2eproto::offsets,
   file_level_metadata_Healtcheck_2eproto, 2, file_level_enum_descriptors_Healtcheck_2eproto, file_level_service_descriptors_Healtcheck_2eproto,
 };

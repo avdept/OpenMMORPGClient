@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package proto_messages;
+import "Player.proto";
+import "DisableWarnings.proto";
+option go_package="github.com/avdept/OpenMMORPG_Server/protos";
+
+message AuthPacket {
+  string Token = 1;
+  int32 CharacterId = 2;
+}
+
+service ServerSession {
+  rpc JoinServer(AuthPacket) returns (Player) {}
+  rpc LeaveServer(AuthPacket) returns(Player) {}
+}

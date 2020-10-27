@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "WorldServerEntity.h"
 #include "UObject/NoExportTypes.h"
 #include "NetworkInterface.generated.h"
 
@@ -19,6 +21,9 @@ class OPENMMORPG_API UNetworkInterface : public UObject
 	
 	UFUNCTION(BlueprintCallable)
 	static void SendGRCPMessage();
+
+	UFUNCTION(BlueprintCallable)
+	static void GetCharactersList(UWorldServerEntity *ServerEntity);
 
 	UFUNCTION(BlueprintCallable)
 	static void SendTCPMessage();

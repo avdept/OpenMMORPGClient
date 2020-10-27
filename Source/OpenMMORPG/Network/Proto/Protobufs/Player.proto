@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package proto_messages;
+import "Error.proto";
+import "DisableWarnings.proto";
+
+option go_package="github.com/avdept/OpenMMORPG_Server/protos";
+
+message Player {
+  string Name = 1;
+  int32 Id = 2;
+  Location Location = 3;
+  Rotation Rotation = 4;
+  repeated Item items = 5;
+  bool RequestResult = 6;
+  Error Error = 7;
+}
+
+message Item {
+  string Name = 1;
+}
+
+message Location {
+  double X = 1;
+  double Y = 2;
+  double Z = 3;
+}
+
+message Rotation {
+  float Yaw = 1;
+}
