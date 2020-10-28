@@ -62,6 +62,7 @@ UWorldServerEntity* UWorldServerEntity::InitNewFWorldServerEntity(FString Server
                                                                   uint8 CharacterCount, uint8 ServerLoad, bool bAllowedToJoin)
 {
     UWorldServerEntity* Entity =  NewObject<UWorldServerEntity>();
+    Entity->Id = Id;
     Entity->ServerName = ServerName;
     Entity->WorldServerUrl = WorldServerUrl;
     Entity->CharacterCount = CharacterCount;
