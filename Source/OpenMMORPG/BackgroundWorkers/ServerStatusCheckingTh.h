@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Runtime/Core/Public/HAL/Runnable.h"
-#include "Runtime/Core/Public/HAL/RunnableThread.h"
 
 class OPENMMORPG_API FServerStatusCheckingTh : public FRunnable
 {

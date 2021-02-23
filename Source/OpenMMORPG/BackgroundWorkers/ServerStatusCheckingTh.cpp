@@ -2,7 +2,7 @@
 #include "ServerStatusCheckingTh.h"
 
 #include "OpenMMORPG_GameInstance.h"
-#include "SocketObject.h"
+#include "../Network/SocketObject.h"
 #include "Network/NetworkSocketManager.h"
 
 FServerStatusCheckingTh * FServerStatusCheckingTh::Runnable = nullptr;

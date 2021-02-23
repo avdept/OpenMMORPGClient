@@ -16,6 +16,10 @@ message Player {
   Error Error = 7;
 }
 
+message PlayerParams {
+  
+}
+
 message Item {
   string Name = 1;
 }
@@ -28,4 +32,8 @@ message Location {
 
 message Rotation {
   float Yaw = 1;
+}
+
+service PlayerService {
+  rpc GetPlayerInfo(PlayerParams) returns (Player) { }
 }

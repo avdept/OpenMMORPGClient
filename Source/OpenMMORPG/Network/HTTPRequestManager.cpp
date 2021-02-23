@@ -5,6 +5,7 @@
 
 
 #include "HttpModule.h"
+#include "WorldStaticManager.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"
 
@@ -15,7 +16,7 @@ UHTTPRequestManager::UHTTPRequestManager()
 
 bool UHTTPRequestManager::FromString(const FString& dataString)
 {
-    TSharedRef<TJsonReader<TCHAR>> JsonReader = TJsonReaderFactory<TCHAR>::Create(dataString);
+    TSharedRef<TJsonReader<TCHAR>> const JsonReader = TJsonReaderFactory<TCHAR>::Create(dataString);
 
     // Deserialize the JSON data
     const bool isDeserialized = FJsonSerializer::Deserialize(JsonReader, Data);
@@ -34,11 +35,9 @@ UHTTPRequestManager* UHTTPRequestManager::Create()
 }
 
 UHTTPRequestManager* UHTTPRequestManager::GetRequest(const FString &url) {
-
-
-
+    FString const AuthToken = WorldStaticManager::GameInstance->AuthToken;
     auto HttpRequest = FHttpModule::Get().CreateRequest();
-    HttpRequest->SetHeader("Authorization", "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJvcGVubW1vcnBnX2xvZ2luc2VydmVyIiwiZXhwIjoxNjA2MTUwNDg3LCJpYXQiOjE2MDM3MzEyODcsImlzcyI6Im9wZW5tbW9ycGdfbG9naW5zZXJ2ZXIiLCJqdGkiOiI1ZGEyMjhkOS05YzQ2LTRmMTktOGM5Mi0wNzYxN2JiNjJmYzMiLCJuYmYiOjE2MDM3MzEyODYsInN1YiI6IjEiLCJ0eXAiOiJhY2Nlc3MifQ.LwZ2q9Bk5oIMWIT4ufLWbNfp1AGjn7ieI4vKw1Gf9ml0K61ORW2xOyv9ICAmzOuC7IG5H0-ZVIBqaCnB4I-QgA");
+    HttpRequest->SetHeader("Authorization", "Bearer " + AuthToken);
     HttpRequest->SetVerb("GET");
     HttpRequest->SetURL(CreateUrl(url));
     HttpRequest->OnProcessRequestComplete().BindUObject(this, &UHTTPRequestManager::OnReady);

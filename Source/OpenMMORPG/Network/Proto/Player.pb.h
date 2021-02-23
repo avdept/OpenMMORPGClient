@@ -49,7 +49,7 @@ struct TableStruct_Player_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -66,6 +66,9 @@ extern LocationDefaultTypeInternal _Location_default_instance_;
 class Player;
 class PlayerDefaultTypeInternal;
 extern PlayerDefaultTypeInternal _Player_default_instance_;
+class PlayerParams;
+class PlayerParamsDefaultTypeInternal;
+extern PlayerParamsDefaultTypeInternal _PlayerParams_default_instance_;
 class Rotation;
 class RotationDefaultTypeInternal;
 extern RotationDefaultTypeInternal _Rotation_default_instance_;
@@ -74,6 +77,7 @@ PROTOBUF_NAMESPACE_OPEN
 template<> ::proto_messages::Item* Arena::CreateMaybeMessage<::proto_messages::Item>(Arena*);
 template<> ::proto_messages::Location* Arena::CreateMaybeMessage<::proto_messages::Location>(Arena*);
 template<> ::proto_messages::Player* Arena::CreateMaybeMessage<::proto_messages::Player>(Arena*);
+template<> ::proto_messages::PlayerParams* Arena::CreateMaybeMessage<::proto_messages::PlayerParams>(Arena*);
 template<> ::proto_messages::Rotation* Arena::CreateMaybeMessage<::proto_messages::Rotation>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace proto_messages {
@@ -326,6 +330,130 @@ class Player PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class PlayerParams PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:proto_messages.PlayerParams) */ {
+ public:
+  inline PlayerParams() : PlayerParams(nullptr) {}
+  virtual ~PlayerParams();
+
+  PlayerParams(const PlayerParams& from);
+  PlayerParams(PlayerParams&& from) noexcept
+    : PlayerParams() {
+    *this = ::std::move(from);
+  }
+
+  inline PlayerParams& operator=(const PlayerParams& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline PlayerParams& operator=(PlayerParams&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const PlayerParams& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const PlayerParams* internal_default_instance() {
+    return reinterpret_cast<const PlayerParams*>(
+               &_PlayerParams_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(PlayerParams& a, PlayerParams& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(PlayerParams* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(PlayerParams* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PlayerParams* New() const final {
+    return CreateMaybeMessage<PlayerParams>(nullptr);
+  }
+
+  PlayerParams* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<PlayerParams>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const PlayerParams& from);
+  void MergeFrom(const PlayerParams& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PlayerParams* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "proto_messages.PlayerParams";
+  }
+  protected:
+  explicit PlayerParams(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_Player_2eproto);
+    return ::descriptor_table_Player_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:proto_messages.PlayerParams)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Player_2eproto;
+};
+// -------------------------------------------------------------------
+
 class Item PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:proto_messages.Item) */ {
  public:
@@ -368,7 +496,7 @@ class Item PROTOBUF_FINAL :
                &_Item_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   friend void swap(Item& a, Item& b) {
     a.Swap(&b);
@@ -512,7 +640,7 @@ class Location PROTOBUF_FINAL :
                &_Location_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   friend void swap(Location& a, Location& b) {
     a.Swap(&b);
@@ -671,7 +799,7 @@ class Rotation PROTOBUF_FINAL :
                &_Rotation_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(Rotation& a, Rotation& b) {
     a.Swap(&b);
@@ -1161,6 +1289,10 @@ inline void Player::set_allocated_error(::proto_messages::Error* error) {
 
 // -------------------------------------------------------------------
 
+// PlayerParams
+
+// -------------------------------------------------------------------
+
 // Item
 
 // string Name = 1;
@@ -1316,6 +1448,8 @@ inline void Rotation::set_yaw(float value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

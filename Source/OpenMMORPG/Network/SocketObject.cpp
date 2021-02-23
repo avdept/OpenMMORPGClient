@@ -1,13 +1,22 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+// DOC:
+// This is a low level class which responsible for establishing communication channels between game client and world server(logic server)
+
+
 
 #include "SocketObject.h"
 
 #include "NetworkConfig.h"
+#include "WorldStaticManager.h"
 #include "google/protobuf/message.h"
 #include "Proto/MessageModels.pb.h"
 #include "Network/Handlers/MessageEncoder.h"
 #include "grpcpp/create_channel.h"
+#include "Network/WorldServerEntity.h"
 #include "Proto/Healtcheck.grpc.pb.h"
+#include "Proto/Server.grpc.pb.h"
+#include "Network/GrpcService.h"
+#include "Proto/Server.pb.h"
 
 
 FSocket *USocketObject::TCPSocket = nullptr;
@@ -28,6 +37,7 @@ void USocketObject::InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCP
 {
     const int32 BufferSize = 2 * 1024 * 1024;
 
+    // grpc::InsecureChannelCredentials should be replaced to ssl creds when game goes live
     GRPCChannel = CreateChannel(std::string(TCHAR_TO_UTF8(*NetworkConfig::tcp_server_url)), grpc::InsecureChannelCredentials());
 
     // We have an option to connect via TCP directly, bypassing http/2 from GRPC. You can uncomment following code
@@ -112,14 +122,69 @@ bool USocketObject::SendByUDP(google::protobuf::Message *message)
 void USocketObject::Reconnect()
 {
     //TCPSocket->Close();
-
     //uint32 OutIP;
     //TCPAddress->GetIp(OutIP);
-
     //FString ip = FString::Printf(TEXT("%d.%d.%d.%d"), 0xff & (OutIP >> 24), 0xff & (OutIP >> 16), 0xff & (OutIP >> 8), 0xff & OutIP);
-
     //InitSocket(ip, TCPLocalPort, TCPAddress->GetPort(), UDPLocalPort, UDPAddress->GetPort());
 }
+
+bool USocketObject::ConnectToWorldServer(UWorldServerEntity* Server, int CharacterID, proto_messages::Player* Player)
+{
+    
+    //std::unique_ptr<proto_messages::ServerSession::Stub> stub = proto_messages::ServerSession::NewStub(USocketObject::GRPCChannel);
+    //grpc::ClientContext context;
+    proto_messages::AuthPacket AuthPacket;
+    
+    auto lambda = [](std::unique_ptr<proto_messages::ServerSession::Stub> &Stub,
+                     grpc::ClientContext *context,
+                     proto_messages::AuthPacket Request,
+                     proto_messages::Player *Response) ->grpc::Status
+    {
+        return Stub->JoinServer(context, Request, Response);
+    };
+
+    grpc::Status const status = SendRequest<proto_messages::ServerSession,
+                proto_messages::AuthPacket,
+                proto_messages::Player>(AuthPacket, *Player, lambda);
+    return status.ok();
+}
+
+bool USocketObject::DisconnectFromWorldServer()
+{
+    proto_messages::AuthPacket Request;
+    proto_messages::Player Player;
+
+
+    auto lambda = [](std::unique_ptr<proto_messages::ServerSession::Stub> &Stub,
+                     grpc::ClientContext *context,
+                     proto_messages::AuthPacket Request,
+                     proto_messages::Player *Response) ->grpc::Status
+    {
+        return Stub->LeaveServer(context, Request, Response);
+    };
+
+    grpc::Status const status = SendRequest<proto_messages::ServerSession,
+                proto_messages::AuthPacket,
+                proto_messages::Player>(Request, Player, lambda);
+    return status.ok();
+    
+    /*grpc::Status const status = stub->LeaveServer(&context, Request, &Player);
+    if (status.ok())
+    {
+        if(Player.requestresult())
+        {
+            GLog->Log("Succesfully logged out");
+        } else
+        {
+            GLog->Log("Error while logging out");
+        }
+    } else
+    {
+        
+        GLog->Log("Error speaking to server");
+    }
+    Request.release_token();*/
+}    
 
 bool USocketObject::Alive()
 {

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package utility_messages;
+
+import "DisableWarnings.proto";
+import "Player.proto";
+option go_package="github.com/avdept/OpenMMORPG_Server/protos";
+
+message LocationPersistenceResult {
+  bool Persisted = 1;
+}
+
+message LocationPersistenceParams {
+  proto_messages.Location Location = 3;
+  proto_messages.Rotation Rotation = 4;
+}
+
+service LocationPersistenceService {
+  rpc PersistLocation(LocationPersistenceParams) returns (LocationPersistenceResult) {};
+}

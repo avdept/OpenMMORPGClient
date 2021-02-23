@@ -142,7 +142,7 @@ const FText ProjectLocationText = FText::FromString(FPaths::ProjectDir() + TEXT(
 FString FServerStarterModule::ListenServerCLA()
 {
 	return FString::Printf(
-            TEXT("\"%s\" StartMap?OpenMMORPGGameMode -Port=%s -server -log -nosteam"),
+            TEXT("\"%s\" ?OpenMMORPGGameMode -Port=%s -server -log -nosteam"),
             *ProjectLocationText.ToString(), ToCStr(FString::FromInt(PortNumber))
         );
 }

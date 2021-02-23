@@ -12,6 +12,8 @@ class OPENMMORPG_API WorldStaticManager
 {
 public:
 	static UOpenMMORPG_GameInstance* GameInstance;
+	static int CurrentCharacterId;
+	static int CurrentUserId;
 	WorldStaticManager();
 	~WorldStaticManager();
 };

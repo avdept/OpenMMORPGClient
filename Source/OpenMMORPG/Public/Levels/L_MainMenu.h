@@ -7,7 +7,7 @@
 #include "Network/WorldServerEntity.h"
 #include "OpenMMORPG/Public/UI/UI_CharacterItem.h"
 #include "OpenMMORPG/Network/HTTPRequestManager.h"
-
+#include "OpenMMORPG/Network/Proto/Player.pb.h"
 
 #include "L_MainMenu.generated.h"
 
@@ -39,6 +39,19 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ShowMenu();
+
+	void HandleServerJoin(const proto_messages::Player& Player, const UWorldServerEntity* Server);
+
+	void HandleServerLoginError(const proto_messages::Player& Player);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void OnJoinServerSuccess();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void OnJoinServerFailed(const FString &Message, bool NeedsImmediateExit);
+	
+	UFUNCTION(BlueprintCallable)
+	bool JoinServer(UWorldServerEntity *Server, int CharacterID);
 	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void ShowCharactersListMenu();

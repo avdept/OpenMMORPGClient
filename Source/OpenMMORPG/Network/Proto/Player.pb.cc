@@ -23,6 +23,10 @@ class PlayerDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Player> _instance;
 } _Player_default_instance_;
+class PlayerParamsDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<PlayerParams> _instance;
+} _PlayerParams_default_instance_;
 class ItemDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Item> _instance;
@@ -82,6 +86,20 @@ static void InitDefaultsscc_info_Player_Player_2eproto() {
       &scc_info_Item_Player_2eproto.base,
       &scc_info_Error_Error_2eproto.base,}};
 
+static void InitDefaultsscc_info_PlayerParams_Player_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::proto_messages::_PlayerParams_default_instance_;
+    new (ptr) ::proto_messages::PlayerParams();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::proto_messages::PlayerParams::InitAsDefaultInstance();
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_PlayerParams_Player_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_PlayerParams_Player_2eproto}, {}};
+
 static void InitDefaultsscc_info_Rotation_Player_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -96,7 +114,7 @@ static void InitDefaultsscc_info_Rotation_Player_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Rotation_Player_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Rotation_Player_2eproto}, {}};
 
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Player_2eproto[4];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Player_2eproto[5];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_Player_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Player_2eproto = nullptr;
 
@@ -113,6 +131,11 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Player_2eproto::offsets[] PROT
   PROTOBUF_FIELD_OFFSET(::proto_messages::Player, items_),
   PROTOBUF_FIELD_OFFSET(::proto_messages::Player, requestresult_),
   PROTOBUF_FIELD_OFFSET(::proto_messages::Player, error_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::proto_messages::PlayerParams, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::proto_messages::Item, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -136,13 +159,15 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Player_2eproto::offsets[] PROT
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::proto_messages::Player)},
-  { 12, -1, sizeof(::proto_messages::Item)},
-  { 18, -1, sizeof(::proto_messages::Location)},
-  { 26, -1, sizeof(::proto_messages::Rotation)},
+  { 12, -1, sizeof(::proto_messages::PlayerParams)},
+  { 17, -1, sizeof(::proto_messages::Item)},
+  { 23, -1, sizeof(::proto_messages::Location)},
+  { 31, -1, sizeof(::proto_messages::Rotation)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::proto_messages::_Player_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::proto_messages::_PlayerParams_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::proto_messages::_Item_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::proto_messages::_Location_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::proto_messages::_Rotation_default_instance_),
@@ -156,27 +181,31 @@ const char descriptor_table_protodef_Player_2eproto[] PROTOBUF_SECTION_VARIABLE(
   "\004 \001(\0132\030.proto_messages.Rotation\022#\n\005items"
   "\030\005 \003(\0132\024.proto_messages.Item\022\025\n\rRequestR"
   "esult\030\006 \001(\010\022$\n\005Error\030\007 \001(\0132\025.proto_messa"
-  "ges.Error\"\024\n\004Item\022\014\n\004Name\030\001 \001(\t\"+\n\010Locat"
-  "ion\022\t\n\001X\030\001 \001(\001\022\t\n\001Y\030\002 \001(\001\022\t\n\001Z\030\003 \001(\001\"\027\n\010"
-  "Rotation\022\013\n\003Yaw\030\001 \001(\002B,Z*github.com/avde"
-  "pt/OpenMMORPG_Server/protosb\006proto3"
+  "ges.Error\"\016\n\014PlayerParams\"\024\n\004Item\022\014\n\004Nam"
+  "e\030\001 \001(\t\"+\n\010Location\022\t\n\001X\030\001 \001(\001\022\t\n\001Y\030\002 \001("
+  "\001\022\t\n\001Z\030\003 \001(\001\"\027\n\010Rotation\022\013\n\003Yaw\030\001 \001(\0022X\n"
+  "\rPlayerService\022G\n\rGetPlayerInfo\022\034.proto_"
+  "messages.PlayerParams\032\026.proto_messages.P"
+  "layer\"\000B,Z*github.com/avdept/OpenMMORPG_"
+  "Server/protosb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Player_2eproto_deps[2] = {
   &::descriptor_table_DisableWarnings_2eproto,
   &::descriptor_table_Error_2eproto,
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Player_2eproto_sccs[4] = {
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Player_2eproto_sccs[5] = {
   &scc_info_Item_Player_2eproto.base,
   &scc_info_Location_Player_2eproto.base,
   &scc_info_Player_Player_2eproto.base,
+  &scc_info_PlayerParams_Player_2eproto.base,
   &scc_info_Rotation_Player_2eproto.base,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Player_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Player_2eproto = {
-  false, false, descriptor_table_protodef_Player_2eproto, "Player.proto", 435,
-  &descriptor_table_Player_2eproto_once, descriptor_table_Player_2eproto_sccs, descriptor_table_Player_2eproto_deps, 4, 2,
+  false, false, descriptor_table_protodef_Player_2eproto, "Player.proto", 541,
+  &descriptor_table_Player_2eproto_once, descriptor_table_Player_2eproto_sccs, descriptor_table_Player_2eproto_deps, 5, 2,
   schemas, file_default_instances, TableStruct_Player_2eproto::offsets,
-  file_level_metadata_Player_2eproto, 4, file_level_enum_descriptors_Player_2eproto, file_level_service_descriptors_Player_2eproto,
+  file_level_metadata_Player_2eproto, 5, file_level_enum_descriptors_Player_2eproto, file_level_service_descriptors_Player_2eproto,
 };
 
 // Force running AddDescriptors() at dynamic initialization time.
@@ -611,6 +640,171 @@ void Player::InternalSwap(Player* other) {
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Player::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
+// ===================================================================
+
+void PlayerParams::InitAsDefaultInstance() {
+}
+class PlayerParams::_Internal {
+ public:
+};
+
+PlayerParams::PlayerParams(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:proto_messages.PlayerParams)
+}
+PlayerParams::PlayerParams(const PlayerParams& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:proto_messages.PlayerParams)
+}
+
+void PlayerParams::SharedCtor() {
+}
+
+PlayerParams::~PlayerParams() {
+  // @@protoc_insertion_point(destructor:proto_messages.PlayerParams)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void PlayerParams::SharedDtor() {
+  GOOGLE_DCHECK(GetArena() == nullptr);
+}
+
+void PlayerParams::ArenaDtor(void* object) {
+  PlayerParams* _this = reinterpret_cast< PlayerParams* >(object);
+  (void)_this;
+}
+void PlayerParams::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void PlayerParams::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const PlayerParams& PlayerParams::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_PlayerParams_Player_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void PlayerParams::Clear() {
+// @@protoc_insertion_point(message_clear_start:proto_messages.PlayerParams)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* PlayerParams::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* PlayerParams::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:proto_messages.PlayerParams)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:proto_messages.PlayerParams)
+  return target;
+}
+
+size_t PlayerParams::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:proto_messages.PlayerParams)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void PlayerParams::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:proto_messages.PlayerParams)
+  GOOGLE_DCHECK_NE(&from, this);
+  const PlayerParams* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<PlayerParams>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:proto_messages.PlayerParams)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:proto_messages.PlayerParams)
+    MergeFrom(*source);
+  }
+}
+
+void PlayerParams::MergeFrom(const PlayerParams& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:proto_messages.PlayerParams)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+}
+
+void PlayerParams::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:proto_messages.PlayerParams)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void PlayerParams::CopyFrom(const PlayerParams& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:proto_messages.PlayerParams)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool PlayerParams::IsInitialized() const {
+  return true;
+}
+
+void PlayerParams::InternalSwap(PlayerParams* other) {
+  using std::swap;
+  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata PlayerParams::GetMetadata() const {
   return GetMetadataStatic();
 }
 
@@ -1272,6 +1466,9 @@ void Rotation::InternalSwap(Rotation* other) {
 PROTOBUF_NAMESPACE_OPEN
 template<> PROTOBUF_NOINLINE ::proto_messages::Player* Arena::CreateMaybeMessage< ::proto_messages::Player >(Arena* arena) {
   return Arena::CreateMessageInternal< ::proto_messages::Player >(arena);
+}
+template<> PROTOBUF_NOINLINE ::proto_messages::PlayerParams* Arena::CreateMaybeMessage< ::proto_messages::PlayerParams >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::proto_messages::PlayerParams >(arena);
 }
 template<> PROTOBUF_NOINLINE ::proto_messages::Item* Arena::CreateMaybeMessage< ::proto_messages::Item >(Arena* arena) {
   return Arena::CreateMessageInternal< ::proto_messages::Item >(arena);

@@ -2,12 +2,15 @@
 
 #include "OpenMMORPGCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "OpenMMORPG_GameInstance.h"
+#include "BackgroundWorkers/LocationPersistenceTh.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AOpenMMORPGCharacter
@@ -25,12 +28,14 @@ AOpenMMORPGCharacter::AOpenMMORPGCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
+	bReplicates = true;
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
+
+
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -43,6 +48,7 @@ AOpenMMORPGCharacter::AOpenMMORPGCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+		
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
@@ -71,10 +77,37 @@ void AOpenMMORPGCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 }
 
+proto_messages::Location* AOpenMMORPGCharacter::GetProtoPlayerLocation()
+{
+	auto ProtoLocation = new proto_messages::Location;
+	FVector loc = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
+	ProtoLocation->set_x(loc.X);
+	ProtoLocation->set_y(loc.Y);
+	ProtoLocation->set_z(loc.Z);
+	return ProtoLocation;
+}
+
 void AOpenMMORPGCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AOpenMMORPGCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if(bLocationPersistenceEnabled)
+	{
+		FLocationPersistenceTh::RunLocationPersisting(this);
+	}
+	
+}
+
+void AOpenMMORPGCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	FLocationPersistenceTh::Shutdown();
 }
 
 void AOpenMMORPGCharacter::LookUpAtRate(float Rate)

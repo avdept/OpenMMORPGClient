@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Network/Proto/Healtcheck.grpc.pb.h"
+#include "Network/Proto/LocationPersistence.pb.h"
+
+
 #include "OpenMMORPGCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -29,6 +33,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=Network)
+	bool bLocationPersistenceEnabled;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character Details")
 	FText CharacterName;
 
@@ -46,6 +53,9 @@ protected:
 	 */
 	void TurnAtRate(float Rate);
 
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 	/**
 	 * Called via input to turn look up/down at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
@@ -59,6 +69,8 @@ protected:
 
 public:
 	/** Returns CameraBoom subobject **/
+	proto_messages::Location* GetProtoPlayerLocation();
+	
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }

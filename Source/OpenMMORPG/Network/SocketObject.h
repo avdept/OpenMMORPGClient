@@ -8,6 +8,10 @@
 #include "SocketSubsystem.h"
 #include "google/protobuf/message.h"
 #include "grpcpp/create_channel.h"
+#include "Network/WorldServerEntity.h"
+#include "Proto/Player.pb.h"
+
+
 
 #include "SocketObject.generated.h"
 
@@ -30,6 +34,8 @@ public:
 	static bool SendByUDP(google::protobuf::Message* message);
 	static void RunUDPSocketReceiver();
 	static void Reconnect();
+	
+
 	static bool ReadDelimitedFrom(google::protobuf::io::CodedInputStream* input, google::protobuf::MessageLite* message);
 	static void Recv(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4Endpoint& EndPt);
 
@@ -48,4 +54,8 @@ public:
 	static int32 UDPLocalPort;
 
 	static void InitSocket(FString ServerAddress, int32 TCPLocalP, int32 TCPServerP, int32 UDPLocalP, int32 UDPServerP);
+
+	//GRPC
+	static bool ConnectToWorldServer(UWorldServerEntity* Server, int CharacterID, proto_messages::Player* Player);
+	static bool DisconnectFromWorldServer();
 };

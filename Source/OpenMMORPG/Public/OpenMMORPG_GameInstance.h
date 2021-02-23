@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "Network/ServerListItem.h"
+#include "OpenMMORPG/OpenMMORPGCharacter.h"
 #include "OpenMMORPG/Network/HTTPRequestManager.h"
 
 
@@ -22,14 +23,16 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	FString AuthToken;
+	UPROPERTY(BlueprintReadOnly)
+	FString CurrentCharacterId;
+
+	UPROPERTY(BlueprintReadWrite)
+	AOpenMMORPGCharacter *PlayerCharacter;
+	
 	virtual void Init() override;
 	virtual void Shutdown() override;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	TArray<UServerListItem*> ServerListItemItems;
-
-	UFUNCTION(BlueprintCallable)
-	void OnServerListFetched(bool bSuccess, UHTTPRequestManager* RequestManager, ERequestResult status);
-	
 	void SetCommandLineArgs();
+
+	proto_messages::Player Player;
 };
