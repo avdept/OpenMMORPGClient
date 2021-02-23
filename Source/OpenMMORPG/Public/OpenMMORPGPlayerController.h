@@ -16,7 +16,10 @@ class OPENMMORPG_API AOpenMMORPGPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-public:	
+public:
+	UPROPERTY(Replicated)
+	FString Name;
+	
 	proto_messages::Player* PlayerInfo;
 	
 };

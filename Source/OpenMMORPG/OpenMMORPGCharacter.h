@@ -39,6 +39,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character Details")
 	FText CharacterName;
 
+
 protected:
 
 	/** Called for forwards/backward input */

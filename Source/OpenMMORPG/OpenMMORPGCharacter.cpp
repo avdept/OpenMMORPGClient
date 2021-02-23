@@ -2,6 +2,7 @@
 
 #include "OpenMMORPGCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "OpenMMORPGPlayerController.h"
 #include "OpenMMORPG_GameInstance.h"
 #include "BackgroundWorkers/LocationPersistenceTh.h"
 #include "Camera/CameraComponent.h"
@@ -17,6 +18,7 @@
 
 AOpenMMORPGCharacter::AOpenMMORPGCharacter()
 {
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -100,6 +102,14 @@ void AOpenMMORPGCharacter::BeginPlay()
 	if(bLocationPersistenceEnabled)
 	{
 		FLocationPersistenceTh::RunLocationPersisting(this);
+	}
+
+	GLog->Log("Building character");
+	auto ctrl = Cast<AOpenMMORPGPlayerController>(GetController());
+
+	if (ctrl)
+	{
+		GLog->Log("Got ctrl");
 	}
 	
 }

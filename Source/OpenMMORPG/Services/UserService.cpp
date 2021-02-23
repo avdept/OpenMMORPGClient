@@ -18,9 +18,11 @@ proto_messages::Player* UserService::GetCharacterProfile()
 		return Stub->GetPlayerInfo(context, Request, Response);
 	};
 
+	GLog->Log("Before request");
 	grpc::Status const status = SendServerRequest<proto_messages::PlayerService,
                 proto_messages::PlayerParams,
                 proto_messages::Player>(*params, *Response, lambda, this->UserToken, this->CharacterID);
+	GLog->Log("After request");
 	if (status.ok())
 	{
 		return Response;
