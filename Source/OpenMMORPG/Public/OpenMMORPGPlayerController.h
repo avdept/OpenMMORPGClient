@@ -19,6 +19,12 @@ class OPENMMORPG_API AOpenMMORPGPlayerController : public APlayerController
 public:
 	UPROPERTY(Replicated)
 	FString Name;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString PlayerID;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString AuthToken;
 	
 	proto_messages::Player* PlayerInfo;
 	

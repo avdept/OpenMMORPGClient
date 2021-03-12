@@ -211,17 +211,15 @@ void USocketObject::RunUDPSocketReceiver()
     GLog->Log("Listening from UDP socket");
     const FTimespan ThreadWaitTime = FTimespan::FromMilliseconds(30);
 
-    try {
+    //try {
         UDPReceiver = new FUdpSocketReceiver(UDPSocket, ThreadWaitTime, TEXT("UDP Receiver"));
         UDPReceiver->OnDataReceived().BindStatic(&USocketObject::Recv);
         UDPReceiver->Start();
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-
-
+    //}
+    //catch(const std::exception& e)
+    //{
+        //std::cerr << e.what() << '\n';
+    //}
 }
 
 void USocketObject::Recv(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4Endpoint& EndPt)

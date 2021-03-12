@@ -3,11 +3,11 @@
 #include "BaseHUD.h"
 
 
-#include <openssl/evp.h>
 
+//#include "openssl/evp.h"
+//#include "openssl/sha.h"
 
-#include "openssl/sha.h"
-#include <sstream>
+//#include <sstream>
 #include <iomanip>
 
 
@@ -31,7 +31,7 @@ FString ABaseHUD::GetSHA256_s(const void * data, size_t data_len)
 {
 
 
-    auto mdctx = EVP_MD_CTX_new();
+    /*auto mdctx = EVP_MD_CTX_new();
     unsigned char md_value[EVP_MAX_MD_SIZE];
     unsigned int md_len;
 
@@ -47,6 +47,7 @@ FString ABaseHUD::GetSHA256_s(const void * data, size_t data_len)
     for (size_t i = 0; i < md_len; ++i)
         s << std::setw(2) << std::hex << (unsigned short)md_value[i];
  
-    return s.str().c_str();
+    return s.str().c_str();*/
+    return "Encoded str";
 }
 

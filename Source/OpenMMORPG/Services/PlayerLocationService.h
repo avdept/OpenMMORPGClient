@@ -17,5 +17,8 @@ public:
 
 	bool SendNewLocation();
 
+	FString Token;
+	FString PlayerID;
+
 	AOpenMMORPGCharacter *Character;
 };

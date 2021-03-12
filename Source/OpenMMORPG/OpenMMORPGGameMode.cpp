@@ -15,10 +15,8 @@ AOpenMMORPGGameMode::AOpenMMORPGGameMode()
 {
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_PlayableCharacter"));
-	if (PlayerPawnBPClass.Class != NULL)
-	{
-		DefaultPawnClass = PlayerPawnBPClass.Class;
-	}
+	DefaultPawnClass = PlayerPawnBPClass.Class;
+	PlayerControllerClass = AOpenMMORPGPlayerController::StaticClass();
 }
 
 
@@ -31,10 +29,8 @@ void AOpenMMORPGGameMode::BeginPlay()
 		UE_LOG(LogTemp, Display, TEXT("##################################      START Gamemode    #######################################"));
 		UE_LOG(LogTemp, Display, TEXT("GM_SERVER_WORLD: BeginPlay"));
 
-
 		UE_LOG(LogTemp, Display, TEXT("##################################        END Gamemode    #######################################"));
 	#endif
-	TestUDPMessage();
 }
 
 void AOpenMMORPGGameMode::TestUDPMessage()
@@ -49,44 +45,32 @@ void AOpenMMORPGGameMode::TestUDPMessage()
 
 void AOpenMMORPGGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
 {
-	UE_LOG(LogTemp, Display, TEXT("##################################      Client prelogin    #######################################"));
-
-	
-	UE_LOG(LogTemp, Display, TEXT("Client with address connected on: %s"), *FText::FromString(Address).ToString());
-
-	UE_LOG(LogTemp, Display, TEXT("Connect params:: %s"), *FText::FromString(Options).ToString());
-	
 
 }
 
 APlayerController* AOpenMMORPGGameMode::Login(UPlayer* NewPlayer, ENetRole InRemoteRole, const FString& Portal,
 	const FString& Options, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
 {
-	GLog->Log("######Server proceeds with login for client");
+	GLog->Log("######            Server proceeds with login for client            #######");
+	
 	auto Ctrl = Cast<AOpenMMORPGPlayerController>(Super::Login(NewPlayer, InRemoteRole, Portal, Options, UniqueId, ErrorMessage));
-	GLog->Log("Controller set");
 	if(!UGameplayStatics::ParseOption(Options, "Token").IsEmpty() && !UGameplayStatics::ParseOption(Options, "PlayerID").IsEmpty())
 	{
 		auto PlayerService = new UserService(UGameplayStatics::ParseOption(Options, "Token"), UGameplayStatics::ParseOption(Options, "PlayerID"));
 		proto_messages::Player* Player = PlayerService->GetCharacterProfile();
-		GLog->Log("Requested player info");
-		GLog->Log(TCHAR_TO_UTF8(Player->name().c_str()));
 		if (Player == nullptr)
 		{
 			// TODO: Handle this on UI
-		GLog->Log("Could not login to server");
-		ErrorMessage = "Could not login to server";
+			GLog->Log("Could not login to server");
+			ErrorMessage = "Could not login to server because no player info received";
+		} else {
+			Ctrl->PlayerInfo = Player;
+			Ctrl->AuthToken = UGameplayStatics::ParseOption(Options, "Token");
+			Ctrl->PlayerID = UGameplayStatics::ParseOption(Options, "PlayerID");	
 		}
-
-		Ctrl->PlayerInfo = Player;
-
-		Ctrl->Name = UTF8_TO_TCHAR(Player->name().c_str());
-			
 		return Ctrl;
 	}
 	
-
-	GLog->Log("Returning default");
 	return Ctrl;
 }
 
@@ -94,9 +78,10 @@ AActor* AOpenMMORPGGameMode::FindPlayerStart_Implementation(AController* Player,
 {
 	auto Ctrl = Cast<AOpenMMORPGPlayerController>(Player);
 
-	if (Ctrl->PlayerInfo)
+
+	if (Ctrl && Ctrl->PlayerInfo)
 	{
-		return GetWorld()->SpawnActor<APlayerStart>(FVector(Ctrl->PlayerInfo->location().x(), Ctrl->PlayerInfo->location().y(), Ctrl->PlayerInfo->location().z()), FRotator());
+		return GetWorld()->SpawnActor<APlayerStart>(FVector(Ctrl->PlayerInfo->location().x(), Ctrl->PlayerInfo->location().y(), Ctrl->PlayerInfo->location().z()), FRotator(0, Ctrl->PlayerInfo->rotation().yaw(), 0));
 	}
 
 	// We dont have PlayerInfo on initial start in menu, hence we want to return 0,0,0

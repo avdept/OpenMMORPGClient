@@ -3,12 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "BackgroundWorkers/LocationPersistenceTh.h"
 #include "GameFramework/Character.h"
 #include "Network/Proto/Healtcheck.grpc.pb.h"
 #include "Network/Proto/LocationPersistence.pb.h"
 
 
 #include "OpenMMORPGCharacter.generated.h"
+
+class FLocationPersistenceTh;
 
 UCLASS(config=Game)
 class AOpenMMORPGCharacter : public ACharacter
@@ -48,6 +52,8 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
+	FLocationPersistenceTh * CurrentPersistingThread = nullptr;
+
 	/** 
 	 * Called via input to turn at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
@@ -70,7 +76,7 @@ protected:
 
 public:
 	/** Returns CameraBoom subobject **/
-	proto_messages::Location* GetProtoPlayerLocation();
+	utility_messages::LocationPersistenceParams* GetProtoPlayerLocation();
 	
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/

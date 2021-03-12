@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "OpenMMORPGCharacter.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
 #include "OpenMMORPGPlayerController.h"
 #include "OpenMMORPG_GameInstance.h"
 #include "BackgroundWorkers/LocationPersistenceTh.h"
@@ -79,15 +78,23 @@ void AOpenMMORPGCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 }
 
-proto_messages::Location* AOpenMMORPGCharacter::GetProtoPlayerLocation()
+utility_messages::LocationPersistenceParams* AOpenMMORPGCharacter::GetProtoPlayerLocation()
 {
+	auto Params = new utility_messages::LocationPersistenceParams;
 	auto ProtoLocation = new proto_messages::Location;
-	FVector loc = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
+	auto Rotation = new proto_messages::Rotation;
+	FRotator rot = GetActorRotation();
+	FVector loc = GetActorLocation();
 	ProtoLocation->set_x(loc.X);
 	ProtoLocation->set_y(loc.Y);
 	ProtoLocation->set_z(loc.Z);
-	return ProtoLocation;
+
+	Rotation->set_yaw(rot.Yaw);
+	Params->set_allocated_location(ProtoLocation);
+	Params->set_allocated_rotation(Rotation);
+	return Params;
 }
+
 
 void AOpenMMORPGCharacter::TurnAtRate(float Rate)
 {
@@ -99,25 +106,32 @@ void AOpenMMORPGCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(bLocationPersistenceEnabled)
-	{
-		FLocationPersistenceTh::RunLocationPersisting(this);
-	}
-
-	GLog->Log("Building character");
-	auto ctrl = Cast<AOpenMMORPGPlayerController>(GetController());
-
-	if (ctrl)
-	{
-		GLog->Log("Got ctrl");
-	}
+	GLog->Log("Begin play");
 	
+
+	if (GetWorld()->GetNetMode() == NM_DedicatedServer)
+	{
+		GLog->Log("Running as dedicated server");
+		GLog->Log("Starting location persisting");
+		CurrentPersistingThread = FLocationPersistenceTh::RunLocationPersisting(this);
+	}
+	//if(bLocationPersistenceEnabled)
+	//{
+	
+	//}
 }
 
 void AOpenMMORPGCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-	FLocationPersistenceTh::Shutdown();
+
+	//#if UE_SERVER
+	if (CurrentPersistingThread != nullptr)
+	{
+		CurrentPersistingThread->Shutdown();
+	}
+		
+	//#endif	
 }
 
 void AOpenMMORPGCharacter::LookUpAtRate(float Rate)

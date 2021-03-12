@@ -1,17 +1,11 @@
 #include "LocationPersistenceTh.h"
-
-
 #include "OpenMMORPG_GameInstance.h"
 #include "../Network/SocketObject.h"
 #include "../Services/PlayerLocationService.h"
 #include "Network/NetworkSocketManager.h"
 
-FLocationPersistenceTh * FLocationPersistenceTh::Runnable = nullptr;
-bool FLocationPersistenceTh::bIsThreadRunning = false;
-
-FLocationPersistenceTh::FLocationPersistenceTh(AOpenMMORPGCharacter* Character)
+FLocationPersistenceTh::FLocationPersistenceTh()
 {
-	CurrentCharacter = Character;
 	Thread = FRunnableThread::Create(this, TEXT("LocationPersistanceThread"), 0, TPri_Normal);
 }
 
@@ -34,40 +28,39 @@ uint32 FLocationPersistenceTh::Run()
 		// We send new location every 1 second 
 		FPlatformProcess::Sleep(1.f);
 
-		GLog->Log("Running location persistence th");
+		auto msg = FString("Running location persistence thread for: ") + FString(this->CurrentCharacter->CharacterName.ToString());
+		GLog->Log(msg);
 		if (CurrentCharacter != nullptr)
 		{
-			GLog->Log("Sending new location");
 			auto service = new PlayerLocationService(CurrentCharacter);
 			service->SendNewLocation();
 			delete service;
 		}
-
-		//GLog->Log("Connect state (bIsConnected) = " + FString::FromInt(static_cast<int32>(USocketObject::bIsConnected)) + " | FServerStatusCheckingTh::CheckServer");
 	}
-
-   
 	return 0;
 }
 
 FLocationPersistenceTh* FLocationPersistenceTh::RunLocationPersisting(AOpenMMORPGCharacter* Character)
 {
-	if (!Runnable && FPlatformProcess::SupportsMultithreading())
+	if (FPlatformProcess::SupportsMultithreading())
 	{
-		Runnable = new FLocationPersistenceTh(Character);
+		auto Th  = new FLocationPersistenceTh();
+		Th->CurrentCharacter = Character;
+		return Th;
 	}
-	return Runnable;
+	return nullptr;
 }
 
 void FLocationPersistenceTh::Shutdown()
 {
-	bIsThreadRunning = false;
+	this->bIsThreadRunning = false;
 	GLog->Log("FLocationPersistenceTh::Shutdown()");
 
-	if (Runnable)
+	if (Thread)
 	{
-		delete Runnable;
-		Runnable = nullptr;
+		Thread->Kill();
+		delete Thread;
+		Thread = nullptr;
 	}
 }
 

@@ -19,19 +19,22 @@ public class OpenMMORPG : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] {"UMG", "Slate", "SlateCore", "Json", "JsonUtilities"});
 
+		AddEngineThirdPartyPrivateStaticDependencies(Target, "OpenSSL");
+		AddEngineThirdPartyPrivateStaticDependencies(Target, "zlib");
+
 		string ProtobufPath = Path.Combine(ThirdPartyPath, "protobuf", "include");
 
 		PublicIncludePaths.Add(ProtobufPath);
 		AddEngineThirdPartyPrivateStaticDependencies(Target, "zlib");
 
-		PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "openssl", "include"));
+		//PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "openssl", "include"));
 		PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "grpc", "include"));
 
 
 		if (Target.Platform == UnrealTargetPlatform.Win64)
 		{
 			string ProtobufLibrariesPath = Path.Combine(ThirdPartyPath, "protobuf", "lib", "Win64");
-			string OpenSSLLibrariesPath = Path.Combine(ThirdPartyPath, "openssl", "lib", "Win64");
+			//string OpenSSLLibrariesPath = Path.Combine(ThirdPartyPath, "openssl", "lib", "Win64");
 			string GrpcLibrariesPath = Path.Combine(ThirdPartyPath, "grpc", "lib", "Win64");
 			string AbseilPath = Path.Combine(ThirdPartyPath, "abseil", "lib", "Win64");
 			string RE2Path = Path.Combine(ThirdPartyPath, "re2", "lib", "Win64");
@@ -69,8 +72,8 @@ public class OpenMMORPG : ModuleRules
 			//Protobuf
 			PublicAdditionalLibraries.Add(Path.Combine(ProtobufLibrariesPath, "libprotobuf.lib"));
 			//BoringSSL
-			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "crypto.lib"));
-			PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "ssl.lib"));
+			//PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "crypto.lib"));
+			//PublicAdditionalLibraries.Add(Path.Combine(OpenSSLLibrariesPath, "ssl.lib"));
 
 
 		}
