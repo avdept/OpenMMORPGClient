@@ -45,7 +45,10 @@ bool PlayerLocationService::SendNewLocation()
 		grpc::Status const status = SendServerRequest<utility_messages::LocationPersistenceService,
                     utility_messages::LocationPersistenceParams,
                     utility_messages::LocationPersistenceResult>(*params, *Response, lambda, Token, PlayerID);
+        params->release_location();
+		params->release_rotation();
 		return status.ok();
+		// We will want to handle success responses which contains errors inside body
 	}
 	return true;
 	
